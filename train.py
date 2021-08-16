@@ -332,7 +332,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
     logging.info(args)
 
-    os.environ['CUDA_VISIBLE_DEVICES'] = args.gpu_nums
+    #os.environ['CUDA_VISIBLE_DEVICES'] = args.gpu_nums
     wandb_logger = WandbLogger(project=args.wandb_project, name=args.run_name)
 
     model = KoBARTConditionalGeneration(args)
