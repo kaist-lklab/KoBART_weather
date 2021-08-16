@@ -11,12 +11,29 @@ from dataset import KoBARTSummaryDataset
 from transformers import BartForConditionalGeneration, PreTrainedTokenizerFast
 from transformers.optimization import AdamW, get_cosine_schedule_with_warmup
 from kobart import get_pytorch_kobart_model, get_kobart_tokenizer
+import textwrap
+import string
+import re
+from pytorch_lightning.loggers import WandbLogger
+from nltk.translate.bleu_score import SmoothingFunction, corpus_bleu, sentence_bleu
 
-parser = argparse.ArgumentParser(description='KoBART Summarization')
+parser = argparse.ArgumentParser(description='KoBART Seq2Seq')
 
 parser.add_argument('--checkpoint_path',
                     type=str,
                     help='checkpoint path')
+
+parser.add_argument('--wandb_project',
+                    type=str,
+                    help='Name of the wandb project')
+
+parser.add_argument('--run_name',
+                    type=str,
+                    help='Name of the wandb run')
+
+parser.add_argument('--gpu_nums',
+                    type=str,
+                    help='A list of gpus that are usable')
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
@@ -29,12 +46,12 @@ class ArgsBase():
             parents=[parent_parser], add_help=False)
         parser.add_argument('--train_file',
                             type=str,
-                            default='data/train.tsv',
+                            default='data/weather_train.tsv',
                             help='train file')
 
         parser.add_argument('--test_file',
                             type=str,
-                            default='data/test.tsv',
+                            default='data/weather_test.tsv',
                             help='test file')
 
         parser.add_argument('--batch_size',
@@ -176,14 +193,67 @@ class KoBARTConditionalGeneration(Base):
     def forward(self, inputs):
 
         attention_mask = inputs['input_ids'].ne(self.pad_token_id).float()
-        decoder_attention_mask = inputs['decoder_input_ids'].ne(self.pad_token_id).float()
+        #decoder_attention_mask = inputs['decoder_input_ids'].ne(self.pad_token_id).float()
+        decoder_attention_mask = inputs['labels'].ne(self.pad_token_id).float()
+        #print(attention_mask)
+        #print(decoder_attention_mask)
+        #exit()
         
         return self.model(input_ids=inputs['input_ids'],
                           attention_mask=attention_mask,
-                          decoder_input_ids=inputs['decoder_input_ids'],
-                          decoder_attention_mask=decoder_attention_mask,
+                          #decoder_input_ids=inputs['decoder_input_ids'],
+                          #decoder_attention_mask=decoder_attention_mask,
                           labels=inputs['labels'], return_dict=True)
 
+    def bleu(self, gen, ref):
+        ref = [ref.split()]
+        gen = gen.split()
+        score_bleu = sentence_bleu(ref,gen)
+        return score_bleu
+
+    def clean_up(self, text):
+        '''
+        text = text.replace(".", '')
+        text = text.replace(',', '')
+        text = text.replace("'", '')
+        text = text.replace('"', '')
+        '''
+        text = text.replace("<s>", "")
+        text =text.replace('<pad>', '')
+        text = text.replace('</s>', '')
+        text = text.replace('<usr>', '')
+        return text  
+
+    def normalize_answer(self, s):
+        """Lower text and remove punctuation, articles and extra whitespace."""
+        def remove_articles(text):
+            return re.sub(r"\b(a|an|the)\b", " ", text)
+        def white_space_fix(text):
+            return " ".join(text.split())
+        def remove_punc(text):
+            exclude = set(string.punctuation)
+            return "".join(ch for ch in text if ch not in exclude)
+        def lower(text):
+            return text.lower()
+        def rid_of_specials(text):
+            text = text.replace("<extra_id_0>", "")
+            text = text.replace("<extra_id_1>", "")
+            return text
+        return rid_of_specials(white_space_fix(remove_articles(remove_punc(lower(s)))))
+
+    def exact_match_score(self, prediction, ground_truth):
+        return int(self.normalize_answer(prediction) == self.normalize_answer(ground_truth))
+
+    def approx_match_score(self, prediction, ground_truth):
+        answer = self.normalize_answer(prediction) 
+        gt = self.normalize_answer(ground_truth)
+        match = 0
+        gt_words = gt.split(" ")
+        for word in gt_words:
+            if word in answer:
+                match = 1
+                return match
+        return match 
 
     def training_step(self, batch, batch_idx):
         outs = self(batch)
@@ -191,7 +261,59 @@ class KoBARTConditionalGeneration(Base):
         self.log('train_loss', loss, prog_bar=True)
         return loss
 
+    def _generative_step(self, batch):
+        attention_mask = batch['input_ids'].ne(self.pad_token_id).float()
+        decoder_attention_mask = batch['decoder_input_ids'].ne(self.pad_token_id).float()
+
+        outs = self.model.generate(
+            batch["input_ids"].cuda(),
+            attention_mask=attention_mask.cuda(),
+            use_cache=True,
+            #decoder_attention_mask=decoder_attention_mask.cuda(),
+            max_length=100,
+            num_beams=5,
+            eos_token_id=1,
+            #decoder_start_token_id=self.pad_token_id
+            #early_stopping=True,
+            #no_repeat_ngram_size=3
+        )
+        target2 = []
+        for ids in batch['labels']:
+            new_ids = [0 if x == -100 else x for x in ids]
+            target2.append(new_ids)
+
+        dec = [self.tokenizer.decode(ids) for ids in outs]
+        texts = [self.tokenizer.decode(ids) for ids in batch['input_ids']]
+        #targets = [tokenizer.decode(ids, for ids in batch['labels']]
+        targets = [self.tokenizer.decode(ids) for ids in target2]
+        batch_len = len(batch['input_ids'])
+        em_correct_num = 0
+        subset_correct_num = 0
+        bleu_score = 0
+        for i in range(len(batch['input_ids'])):
+            lines = textwrap.wrap("\n%s\n" % texts[i], width=3000)
+            lines = self.clean_up(lines[0])
+            ground_truth = self.clean_up(targets[i])
+            predicted = self.clean_up(dec[i])
+            em = self.exact_match_score(predicted, ground_truth)
+            subset = self.approx_match_score(predicted, ground_truth)  
+            if i == 0:      
+                print(f'INPUT : {lines}')
+                print(f'GROUD TRUTH: {ground_truth}, MODEL OUTPUT: {predicted}')
+            if em == 1:
+                em_correct_num+=1
+            if subset == 1:
+                subset_correct_num+=1
+            bleu_score+=self.bleu(predicted, ground_truth)
+        bleu_score = bleu_score / batch_len
+        em_score = em_correct_num / batch_len
+        subset_score = subset_correct_num / batch_len
+        self.log('em_score', em_score, prog_bar=True, logger=True)
+        self.log('subset_score', subset_score, prog_bar=True, logger=True)
+        self.log('bleu_score', bleu_score, prog_bar=True, logger=True)
+
     def validation_step(self, batch, batch_idx):
+        self._generative_step(batch)
         outs = self(batch)
         loss = outs['loss']
         return (loss)
@@ -209,6 +331,9 @@ if __name__ == '__main__':
     parser = pl.Trainer.add_argparse_args(parser)
     args = parser.parse_args()
     logging.info(args)
+
+    os.environ['CUDA_VISIBLE_DEVICES'] = args.gpu_nums
+    wandb_logger = WandbLogger(project=args.wandb_project, name=args.run_name)
 
     model = KoBARTConditionalGeneration(args)
 

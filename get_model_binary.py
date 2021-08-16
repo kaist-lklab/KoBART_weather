@@ -15,4 +15,3 @@ with open(args.hparams) as f:
 inf = KoBARTConditionalGeneration.load_from_checkpoint(args.model_binary, hparams=hparams)
 
 inf.model.save_pretrained(args.output_dir)
-
