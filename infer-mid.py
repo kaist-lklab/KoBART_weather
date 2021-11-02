@@ -4,9 +4,6 @@ import streamlit as st
 from kobart import get_kobart_tokenizer
 from transformers.models.bart import BartForConditionalGeneration
 from tokenizers import Tokenizer
-from grammar_regex import is_correct_grammar
-
-
 
 @st.cache(allow_output_mutation=True,
         hash_funcs={torch.Tensor: lambda tensor: tensor.detach().cpu().numpy(),
@@ -19,26 +16,16 @@ def load_model():
 def get_tokenizer():
     return get_kobart_tokenizer()
 
-#@st.cache
+@st.cache
 def get_output(text, num_sequences=5):
     global model
     input_ids = tokenizer.encode(text)
     input_ids = torch.tensor(input_ids).to('cuda')
     input_ids = input_ids.unsqueeze(0)
-    outputs = model.generate(input_ids, eos_token_id=1, max_length=512, num_beams=20, num_return_sequences=20)
+    outputs = model.generate(input_ids, eos_token_id=1, max_length=512, num_beams=10, num_return_sequences=num_sequences)
     res = []
     for output in outputs:
         res.append(tokenizer.decode(output, skip_special_tokens=True))
-    filtered_res = [x for x in res if is_correct_grammar(x)]
-    if len(filtered_res) < num_sequences:
-        st.markdown(f"Top-k 20개를 generation해본 결과 문법에 맞는 문장 {num_sequences}개는 찾을 수 없었습니다. ({len(filtered_res)}개만 문법 검사를 통과했습니다)") # 대신 원본 생성 결과를 출력합니다.")
-        #st.markdown("문법에 맞는 문장은 아래와 같습니다:")
-        #for txt in filtered_res:
-        #    st.markdown("```" + txt + "```")
-        #res = res[:num_sequences]
-        res = filtered_res
-    else:
-        res = filtered_res[:num_sequences]
     print('')
     print("result of get_output:")
     print(res)
@@ -60,53 +47,17 @@ text_options = [
         '파주 KIM전구의 연직시계열(단기)',
         '상주 ECM(WF)전구의 연직시계열(단기)',
         '철원 ECM(WF)전구의 연직시계열중기',
+        '직접 입력'
         ]
 
-#select_text = c1.selectbox("자연어 질문 예시", options=text_options)
+c1, c2 = st.columns([7, 3])
+sample_text = ''
+st.header("작성 옵션: ")
+text = c1.selectbox(sample_text, options=text_options)
+if text == '직접 입력':
+    text = c1.text_input('')
 
-
-#if select_text:
-#    default_text = select_text
-#else:
-#    default_text = ''
-
-#text = c2.text_input("자연어 질문 입력:(예: 제주 KIM전구의 단열선도)", value=default_text)
-#st.markdown("자연어 질문 입력")
-#text = st.text_input("자연어 질문 입력: (예: 제주 KIM전구의 단열선도)")
-
-#if check_box:
-#    text = c1.selectbox("자연어 질문 예시", options=text_options)
-#else:
-#with check_box:
-#    for i in range(len(text_options)):
-#        btn = st.button(text_options[i])
-#        if btn:
-#            sample_text = text_options[i]
-sample_text = st.selectbox("자연어 질문 예시 보기", options=text_options)
-c1, c2 = st.columns([7, 2])
-text = c1.text_input('자연어 질문 입력', value=sample_text)
 k = c2.number_input('생성할 결과 개수', min_value=1, max_value=10, value=5, step=1)
-
-#expander = st.expander("자연어 질문 예시")
-#with expander:
-#    st.button("some buton ")
-
-m = st.markdown("""
-        <style>
-        div.stButton > button:first-child {
-                outline: none !important;
-                border: 0px solid transparent;
-                display: block;
-                width: 100%;
-                text-align: left;
-        }
-        div[data-baseweb="select"] > div {
-                background-color: transparent;
-        }
-        </style>""", unsafe_allow_html=True)
-
-#b = st.button("test")
-
 
 if text: #c2.button('제출')
     if not text:
@@ -119,8 +70,7 @@ if text: #c2.button('제출')
         #with st.spinner('processing..'):
         outputs = get_output(text, num_sequences=k)
         #df = pd.DataFrame(outputs, columns=['생성 결과'])
-        length =len(outputs)
-        df = pd.DataFrame({"Topk": list(range(1, length+1)), "생성 결과": outputs})#.set_index("생성 순위")
+        df = pd.DataFrame({"Topk": list(range(1, k+1)), "생성 결과": outputs})#.set_index("생성 순위")
         df = df.assign(hack='').set_index('hack')
         #df.columns.name = 'idx'
         #df.style.apply(lambda x: ['background: lightgreen' if x['idx'] == 0 else '' for i in x], axis=1)
