@@ -2,7 +2,7 @@ import torch
 from kobart import get_kobart_tokenizer
 from transformers.models.bart import BartForConditionalGeneration
 from tokenizers import Tokenizer
-
+from grammar_regex import is_correct_grammar
 
 def load_model():
     model = BartForConditionalGeneration.from_pretrained('./kobart_weather_v2')
@@ -20,9 +20,19 @@ def get_output(input):
     input_ids = tokenizer.encode(text)
     input_ids = torch.tensor(input_ids).to('cuda')
     input_ids = input_ids.unsqueeze(0)
-    output = model.generate(input_ids, eos_token_id=1, max_length=512, num_beams=5, num_return_sequences=1)
-    res = tokenizer.decode(output[0], skip_special_tokens=True)
-    return [text, res, date]
+    outputs = model.generate(input_ids, eos_token_id=1, max_length=512, num_beams=5, num_return_sequences=5)
+    res = []
+    for output in outputs:
+        res.append(tokenizer.decode(output, skip_special_tokens=True))
+    out = None
+    for x in res:
+        if is_correct_grammar(x):
+            criteria_met = True
+            out = x
+            break
+    if out==None:
+        out = res[0]
+    return [text, out, date]
 
 def response_template(res):
     input = res[0]
@@ -50,8 +60,10 @@ def response_template(res):
     }
     return response
 
+example = "KIM전구 K Index"
+
 input = {
-    "source" : "오늘의 UM전구 저기압이동경로",
+    "source" : example,
     "date" : "2021-10-18 00:00:00",
     "sourceType" : "text",
     "responseChannel": "aiw-response"
