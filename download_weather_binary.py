@@ -22,5 +22,5 @@ def download_public_file(bucket_name, directory_name):
             )
         )
 
-os.makedirs('kobart_weather', exist_ok=True)
+os.makedirs('kobart_weather_v2', exist_ok=True)
 download_public_file('weather_lklab', 'kobart_weather_v2/')
