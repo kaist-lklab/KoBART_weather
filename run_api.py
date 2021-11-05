@@ -4,6 +4,7 @@ from flask import Flask, request, jsonify
 from transformers.models.bart import BartForConditionalGeneration
 from tokenizers import Tokenizer
 from grammar_regex import is_correct_grammar
+import sys
 
 app = Flask(__name__)
 
@@ -93,14 +94,20 @@ input = {
 if __name__ == '__main__':
     global model
     global tokenizer
+    """
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument('--portnum', type=int, default=5000)
-    args = parser.parse_args()
+    """
+    argvs = sys.argv
+    if len(argvs) != 2:
+        raise Exception("You need to specify the port number")
+    portnum = int(sys.argv[1])
+    #args = parser.parse_args()
     model = load_model()
     model = model.to('cuda')
     tokenizer = get_tokenizer()
-    app.run(host='0.0.0.0', port=args.p, debug=False)
+    app.run(host='0.0.0.0', port=portnum, debug=False)
 """
 output = response_template(get_output(input))
 
