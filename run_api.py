@@ -69,8 +69,10 @@ def response_template(res):
 def process_request():
     global model
     global tokenizer
-    text_input = json.loads(request.data)
-    output = respose_template(get_output(text_input))
+    text_input = request.get_json()
+    if text_input is None:
+        output = response_template("Input is not a JSON form")
+    output = response_template(get_output(text_input))
     return output
 
 
@@ -87,12 +89,18 @@ input = {
     "responseChannel": "aiw-response"
 }
 """
-global model
-global tokenizer
-model = load_model()
-model = model.to('cuda')
-tokenizer = get_tokenizer()
-app.run(debug=True)
+
+if __name__ == '__main__':
+    global model
+    global tokenizer
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--p', type=int, default=5000)
+    args = parser.parse_args()
+    model = load_model()
+    model = model.to('cuda')
+    tokenizer = get_tokenizer()
+    app.run(host='0.0.0.0', port=args.p, debug=False)
 """
 output = response_template(get_output(input))
 
