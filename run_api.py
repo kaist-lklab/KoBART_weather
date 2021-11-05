@@ -9,7 +9,7 @@ app = Flask(__name__)
 
 
 def load_model():
-    model = BartForConditionalGeneration.from_pretrained('./kobart_weather_v2')
+    model = BartForConditionalGeneration.from_pretrained('home/KoBART-summarization/kobart_weather_v2')
     return model
 
 def get_tokenizer():
@@ -95,7 +95,7 @@ if __name__ == '__main__':
     global tokenizer
     import argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument('--p', type=int, default=5000)
+    parser.add_argument('--portnum', type=int, default=5000)
     args = parser.parse_args()
     model = load_model()
     model = model.to('cuda')
