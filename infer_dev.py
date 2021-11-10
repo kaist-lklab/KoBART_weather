@@ -3,6 +3,10 @@ from kobart import get_kobart_tokenizer
 from transformers.models.bart import BartForConditionalGeneration
 from tokenizers import Tokenizer
 from grammar_regex import is_correct_grammar
+import pandas as pd
+from random import randrange
+
+sql_template = pd.read_csv("sql_dummy.csv")
 
 def load_model():
     model = BartForConditionalGeneration.from_pretrained('./kobart_weather_v2')
@@ -10,6 +14,12 @@ def load_model():
 
 def get_tokenizer():
     return get_kobart_tokenizer()
+
+def get_sql(input):
+    ind = randrange(len(sql_template))
+    for index, row in sql_template.iterrows():
+        if index==ind:
+            return row["sql"]
 
 def get_output(input):
     text = input['source']
@@ -32,12 +42,14 @@ def get_output(input):
             break
     if out==None:
         out = res[0]
-    return [text, out, date]
+    sql = get_sql(text)
+    return [text, out, date, sql]
 
 def response_template(res):
     input = res[0]
     output = res[1]
     date = res[2]
+    sql = res[3]
     if date!=[]:
         year = date[0]
         month = date[1]
@@ -56,7 +68,7 @@ def response_template(res):
             "site":"COMIS",
             "pseudo":output,
         }, {}],
-        "extremeValue":[]
+        "extremeValue":[sql]
     }
     return response
 
