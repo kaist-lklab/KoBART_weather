@@ -66,11 +66,13 @@ def response_template(res):
     return response
 
 
-@app.route('/', methods=['POST'])
+@app.route('/api/search/text', methods=['GET'])
 def process_request():
     global model
     global tokenizer
-    text_input = request.get_json()
+    text_input = {}
+    text_input['source'] = request.args.get('source')
+    text_input['date'] = request.args.get('date')
     if text_input is None:
         output = response_template("Input is not a JSON form")
     output = response_template(get_output(text_input))
