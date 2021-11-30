@@ -157,7 +157,7 @@ model = model.to('cuda')
 model2 = model2.to('cuda')
 
 tokenizer = get_tokenizer()
-templates = get_template_embeddings(model2, 'data/template.csv')
+templates = get_template_embeddings(model2, 'template.csv')
 
 output = response_template(get_output(input, templates))
 
