@@ -175,7 +175,25 @@ def get_sql(input, templates):
             template_var = input_template[t1+1:t2]
             input_var = input[o1+1:o2]
             if template_var in ot:
-                ot = ot.replace(template_var, input_var)
+                if 'date' in template_var: #handling date
+                    input_var = '2021년도 12월 4일'
+                    year_ = input_var.split('년도')
+                    year = year_[0]
+                    month_ = year_[1].split('월') 
+                    month = month_[0][1:]
+                    day_ = month_[1].split('일')
+                    day = day_[0][1:]
+                    input_var = f"'{year+month+day}'"
+                    ot = ot.replace(template_var, input_var)
+                elif 'month' in template_var:
+                    month= (input_var.split('월'))[0]
+                    input_var = f"'{month}'"
+                    ot = ot.replace(template_var, input_var)
+                elif 'number' in template_var:
+                    ot = ot.replace(template_var, input_var)
+                else:
+                    input_var = f"'{input_var}'"
+                    ot = ot.replace(template_var, input_var)
     if ot == output_template:
         return []
     else:

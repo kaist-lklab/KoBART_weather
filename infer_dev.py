@@ -18,40 +18,59 @@ def get_tokenizer():
     return get_kobart_tokenizer()
 
 def get_sql(input, templates):
-    template_embeds = templates[0]
-    index_to_input = templates[1]
-    template_dict = templates[2]
-    
-    embeds = model2.encode(input)
-    
+    global model2
+    template_embeds = templates[0]       
+    index_to_input = templates[1]    
+    template_dict = templates[2]         
+    embeds = model2.encode(input)     
     #Compute cosine-similarities for input and input templates for matching
-    cosine_scores = util.pytorch_cos_sim(embeds, template_embeds)
-    indx = np.argmax((cosine_scores.numpy())[0]) 
+    cosine_scores = util.pytorch_cos_sim(embeds, template_embeds)                                           
+    indx = np.argmax((cosine_scores.numpy())[0])               
     input_template = index_to_input[indx]
-    ot = template_dict[input_template] #matched sql template
-
+    output_template = template_dict[input_template] #matched sql template          
     checkpoints = []
     j=0
     # Getting checkpoints between matched template & input
-    for i in range(len(input_template)):
+    for i in range(len(input_template)):     
         if input_template[i] in input[j:]:
             j_ = input[j:].index(input_template[i])
             j = j + j_
             checkpoints.append([i,j])
-            
+    ot = output_template
     #Iterate through the checkpoints
     for i in range(len(checkpoints)-1):
         t1 = checkpoints[i][0]
         o1 = checkpoints[i][1]
         t2 = checkpoints[i+1][0]
         o2 = checkpoints[i+1][1]
-        
+
         if (t1+1)!=t2:
             template_var = input_template[t1+1:t2]
             input_var = input[o1+1:o2]
             if template_var in ot:
-                ot = ot.replace(template_var, input_var)
-    return ot
+                if 'date' in template_var: #handling date
+                    input_var = '2021년도 12월 4일'
+                    year_ = input_var.split('년도')
+                    year = year_[0]
+                    month_ = year_[1].split('월') 
+                    month = month_[0][1:]
+                    day_ = month_[1].split('일')
+                    day = day_[0][1:]
+                    input_var = f"'{year+month+day}'"
+                    ot = ot.replace(template_var, input_var)
+                elif 'month' in template_var:
+                    month= (input_var.split('월'))[0]
+                    input_var = f"'{month}'"
+                    ot = ot.replace(template_var, input_var)
+                elif 'number' in template_var:
+                    ot = ot.replace(template_var, input_var)
+                else:
+                    input_var = f"'{input_var}'"
+                    ot = ot.replace(template_var, input_var)
+    if ot == output_template:
+        return []
+    else:
+        return [ot]
     
 def get_output(input, templates):
     text = input['source']
