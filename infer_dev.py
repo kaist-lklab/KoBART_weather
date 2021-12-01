@@ -128,7 +128,10 @@ def response_template(res):
     return response
 
 def get_template_embeddings(model, data_dir):
-    sql_template = pd.read_csv("data/template.csv")
+    try:
+        sql_template = pd.read_csv("data/template.csv")
+    except:
+        sql_template = pd.read_csv('home/KoBART-summarization/template.csv')
     template_dict = {}
     index_to_input = {}
     template_embeds = []
@@ -143,26 +146,28 @@ def get_template_embeddings(model, data_dir):
 
     return (template_embeds, index_to_input, template_dict)
 
-example = "2021-10-01 09:00 KIM전구 K Index"
 
-input = {
-    "source" : example,
-    "date" : "2021-11-16 00:00:00",
-    "sourceType" : "text",
-    "responseChannel": "aiw-response"
-}
-
-model, model2 = load_model()
-model = model.to('cuda')
-model2 = model2.to('cuda')
 
 tokenizer = get_tokenizer()
-templates = get_template_embeddings(model2, 'template.csv')
+if __name__ == '__main__':
+    example = "2021-10-01 09:00 KIM전구 K Index"
 
-output = response_template(get_output(input, templates))
+    input = {
+        "source" : example,
+        "date" : "2021-11-16 00:00:00",
+        "sourceType" : "text",
+        "responseChannel": "aiw-response"
+    }
 
-pprint(input)
-pprint(output)
+    model, model2 = load_model()
+    model = model.to('cuda')
+    model2 = model2.to('cuda')
+
+    tokenizer = get_tokenizer()
+    templates = get_template_embeddings(model2, 'template.csv')
+
+    output = response_template(get_output(input, templates))
 
 
-
+    print('input:', input)
+    print('output:', output)
