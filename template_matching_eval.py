@@ -2,8 +2,8 @@ from sentence_transformers import SentenceTransformer, util
 import pandas as pd 
 import numpy as np 
 
-template = pd.read_csv("data/template.csv")
-evaluation = pd.read_csv("data/evaluation.csv")
+template = pd.read_csv("template.csv")
+evaluation = pd.read_csv("evaluation.csv")
 model = SentenceTransformer('sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2')
 
 template_dict = {}
