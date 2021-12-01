@@ -98,14 +98,12 @@ def response_template(res):
         output = output.replace('YYYYMMDDHHMI', year+month+day+hour+minute)
     else:                   
         output = output.replace("입력='YYYYMMDDHHMI'", '')
-    sql = sql.replace('YYYYMMDD', year+month+day)
-    sql = sql.replace('MMDD', month+day)
     response = {
         "pseudoList":[{
             "site":"COMIS",                                 
             "pseudo":output,
         }, {}],
-        "extremeValue":[sql]
+        "extremeValue":sql
     }                       
     return response
 
@@ -181,7 +179,7 @@ def get_sql(input, templates):
     if ot == output_template:
         return []
     else:
-        return ot
+        return [ot]
 
 if __name__ == '__main__':
     global model, model2
