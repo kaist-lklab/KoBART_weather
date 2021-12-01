@@ -1,0 +1,1353 @@
+template,instance,input,output
+1,1,전기간 전지점 일단위 최고온도 3개,"SELECT * FROM (
+                    SELECT TO_CHAR(T.tm,'YYYYMMDD')|| ' ' ||TO_CHAR(T.TA_MAX_TM ,'0000')      AS 관측시각   
+                     ,S. STN_KO , S.STN_ID
+                     , TA_MAX AS   기온
+                    , ROW_NUMBER() OVER (PARTITION BY T.STN_ID ORDER BY TA_MAX desc) TNRW
+                    FROM  SFC_DAY_TA T
+                    ,  ( SELECT * FROM (
+                                                                SELECT S.* 
+                                                                ,ROW_NUMBER()  OVER (PARTITION BY STN_ID  ORDER BY TM_ED DESC  ) rnk
+                                                                FROM STN_AWS S    
+                                                            ) WHERE RNK = 1 ) S
+                    WHERE   1=1
+                    AND  T.STN_ID = S.STN_ID
+                    AND   TA_MAX IS NOT NULL   ) M    
+            , (SELECT STN_ID , DENSE_RANK()   OVER ( ORDER BY TA_MAX desc) TMRN
+         FROM (SELECT TM , STN_ID , TA_MAX, RANK()   OVER ( PARTITION BY STN_ID    ORDER BY TA_MAX desc) TRN  
+                    FROM  SFC_DAY_TA  DT WHERE TA_MAX IS NOT NULL  )  SDT
+          WHERE TRN = 1  ) SDT2 
+WHERE  TNRW <= 3
+AND  M.STN_ID = SDT2.STN_ID
+ORDER BY TMRN
+;"
+1,2,전기간 전지점 일단위 최고온도 5개,"SELECT * FROM (
+                    SELECT TO_CHAR(T.tm,'YYYYMMDD')|| ' ' ||TO_CHAR(T.TA_MAX_TM ,'0000')      AS 관측시각   
+                     ,S. STN_KO , S.STN_ID
+                     , TA_MAX AS   기온
+                    , ROW_NUMBER() OVER (PARTITION BY T.STN_ID ORDER BY TA_MAX desc) TNRW
+                    FROM  SFC_DAY_TA T
+                    ,  ( SELECT * FROM (
+                                                                SELECT S.* 
+                                                                ,ROW_NUMBER()  OVER (PARTITION BY STN_ID  ORDER BY TM_ED DESC  ) rnk
+                                                                FROM STN_AWS S    
+                                                            ) WHERE RNK = 1 ) S
+                    WHERE   1=1
+                    AND  T.STN_ID = S.STN_ID
+                    AND   TA_MAX IS NOT NULL   ) M    
+            , (SELECT STN_ID , DENSE_RANK()   OVER ( ORDER BY TA_MAX desc) TMRN
+         FROM (SELECT TM , STN_ID , TA_MAX, RANK()   OVER ( PARTITION BY STN_ID    ORDER BY TA_MAX desc) TRN  
+                    FROM  SFC_DAY_TA  DT WHERE TA_MAX IS NOT NULL  )  SDT
+          WHERE TRN = 1  ) SDT2 
+WHERE  TNRW <= 5 
+AND  M.STN_ID = SDT2.STN_ID
+ORDER BY TMRN
+;"
+1,3,전기간 전지점 일단위 최고온도 12개,"SELECT * FROM (
+                    SELECT TO_CHAR(T.tm,'YYYYMMDD')|| ' ' ||TO_CHAR(T.TA_MAX_TM ,'0000')      AS 관측시각   
+                     ,S. STN_KO , S.STN_ID
+                     , TA_MAX AS   기온
+                    , ROW_NUMBER() OVER (PARTITION BY T.STN_ID ORDER BY TA_MAX desc) TNRW
+                    FROM  SFC_DAY_TA T
+                    ,  ( SELECT * FROM (
+                                                                SELECT S.* 
+                                                                ,ROW_NUMBER()  OVER (PARTITION BY STN_ID  ORDER BY TM_ED DESC  ) rnk
+                                                                FROM STN_AWS S    
+                                                            ) WHERE RNK = 1 ) S
+                    WHERE   1=1
+                    AND  T.STN_ID = S.STN_ID
+                    AND   TA_MAX IS NOT NULL   ) M    
+            , (SELECT STN_ID , DENSE_RANK()   OVER ( ORDER BY TA_MAX desc) TMRN
+         FROM (SELECT TM , STN_ID , TA_MAX, RANK()   OVER ( PARTITION BY STN_ID    ORDER BY TA_MAX desc) TRN  
+                    FROM  SFC_DAY_TA  DT WHERE TA_MAX IS NOT NULL  )  SDT
+          WHERE TRN = 1  ) SDT2 
+WHERE  TNRW <= 12
+AND  M.STN_ID = SDT2.STN_ID
+ORDER BY TMRN
+;"
+1,4,전기간 전지점 일단위 최고온도 23개,"SELECT * FROM (
+                    SELECT TO_CHAR(T.tm,'YYYYMMDD')|| ' ' ||TO_CHAR(T.TA_MAX_TM ,'0000')      AS 관측시각   
+                     ,S. STN_KO , S.STN_ID
+                     , TA_MAX AS   기온
+                    , ROW_NUMBER() OVER (PARTITION BY T.STN_ID ORDER BY TA_MAX desc) TNRW
+                    FROM  SFC_DAY_TA T
+                    ,  ( SELECT * FROM (
+                                                                SELECT S.* 
+                                                                ,ROW_NUMBER()  OVER (PARTITION BY STN_ID  ORDER BY TM_ED DESC  ) rnk
+                                                                FROM STN_AWS S    
+                                                            ) WHERE RNK = 1 ) S
+                    WHERE   1=1
+                    AND  T.STN_ID = S.STN_ID
+                    AND   TA_MAX IS NOT NULL   ) M    
+            , (SELECT STN_ID , DENSE_RANK()   OVER ( ORDER BY TA_MAX desc) TMRN
+         FROM (SELECT TM , STN_ID , TA_MAX, RANK()   OVER ( PARTITION BY STN_ID    ORDER BY TA_MAX desc) TRN  
+                    FROM  SFC_DAY_TA  DT WHERE TA_MAX IS NOT NULL  )  SDT
+          WHERE TRN = 1  ) SDT2 
+WHERE  TNRW <= 23
+AND  M.STN_ID = SDT2.STN_ID
+ORDER BY TMRN
+;"
+2,1,전기간 전지점 일단위 최저온도 2개,"SELECT * FROM (
+                    SELECT TO_CHAR(T.tm,'YYYYMMDD')|| ' ' ||TO_CHAR(T.TA_MIN_TM ,'0000')      AS 관측시각   
+                     ,S. STN_KO , S.STN_ID
+                     , TA_MIN AS   기온
+                    , ROW_NUMBER() OVER (PARTITION BY T.STN_ID ORDER BY TA_MIN desc) TNRW
+                    FROM  SFC_DAY_TA T
+                    ,  ( SELECT * FROM (
+                                                                SELECT S.* 
+                                                                ,ROW_NUMBER()  OVER (PARTITION BY STN_ID  ORDER BY TM_ED DESC  ) rnk
+                                                                FROM STN_AWS S    
+                                                            ) WHERE RNK = 1 ) S
+                    WHERE   1=1
+                    AND  T.STN_ID = S.STN_ID
+                    AND   TA_MIN IS NOT NULL   ) M    
+            , (SELECT STN_ID , DENSE_RANK()   OVER ( ORDER BY TA_MIN desc) TMRN
+         FROM (SELECT TM , STN_ID , TA_MIN, RANK()   OVER ( PARTITION BY STN_ID    ORDER BY TA_MIN desc) TRN  
+                    FROM  SFC_DAY_TA  DT WHERE TA_MIN IS NOT NULL  )  SDT
+          WHERE TRN = 1  ) SDT2 
+WHERE  TNRW <= 2
+AND  M.STN_ID = SDT2.STN_ID
+ORDER BY TMRN
+;"
+2,2,전기간 전지점 일단위 최저온도 4개,"SELECT * FROM (
+                    SELECT TO_CHAR(T.tm,'YYYYMMDD')|| ' ' ||TO_CHAR(T.TA_MIN_TM ,'0000')      AS 관측시각   
+                     ,S. STN_KO , S.STN_ID
+                     , TA_MIN AS   기온
+                    , ROW_NUMBER() OVER (PARTITION BY T.STN_ID ORDER BY TA_MIN desc) TNRW
+                    FROM  SFC_DAY_TA T
+                    ,  ( SELECT * FROM (
+                                                                SELECT S.* 
+                                                                ,ROW_NUMBER()  OVER (PARTITION BY STN_ID  ORDER BY TM_ED DESC  ) rnk
+                                                                FROM STN_AWS S    
+                                                            ) WHERE RNK = 1 ) S
+                    WHERE   1=1
+                    AND  T.STN_ID = S.STN_ID
+                    AND   TA_MIN IS NOT NULL   ) M    
+            , (SELECT STN_ID , DENSE_RANK()   OVER ( ORDER BY TA_MIN desc) TMRN
+         FROM (SELECT TM , STN_ID , TA_MIN, RANK()   OVER ( PARTITION BY STN_ID    ORDER BY TA_MIN desc) TRN  
+                    FROM  SFC_DAY_TA  DT WHERE TA_MIN IS NOT NULL  )  SDT
+          WHERE TRN = 1  ) SDT2 
+WHERE  TNRW <= 4
+AND  M.STN_ID = SDT2.STN_ID
+ORDER BY TMRN
+;"
+2,3,전기간 전지점 일단위 최저온도 13개,"SELECT * FROM (
+                    SELECT TO_CHAR(T.tm,'YYYYMMDD')|| ' ' ||TO_CHAR(T.TA_MIN_TM ,'0000')      AS 관측시각   
+                     ,S. STN_KO , S.STN_ID
+                     , TA_MIN AS   기온
+                    , ROW_NUMBER() OVER (PARTITION BY T.STN_ID ORDER BY TA_MIN desc) TNRW
+                    FROM  SFC_DAY_TA T
+                    ,  ( SELECT * FROM (
+                                                                SELECT S.* 
+                                                                ,ROW_NUMBER()  OVER (PARTITION BY STN_ID  ORDER BY TM_ED DESC  ) rnk
+                                                                FROM STN_AWS S    
+                                                            ) WHERE RNK = 1 ) S
+                    WHERE   1=1
+                    AND  T.STN_ID = S.STN_ID
+                    AND   TA_MIN IS NOT NULL   ) M    
+            , (SELECT STN_ID , DENSE_RANK()   OVER ( ORDER BY TA_MIN desc) TMRN
+         FROM (SELECT TM , STN_ID , TA_MIN, RANK()   OVER ( PARTITION BY STN_ID    ORDER BY TA_MIN desc) TRN  
+                    FROM  SFC_DAY_TA  DT WHERE TA_MIN IS NOT NULL  )  SDT
+          WHERE TRN = 1  ) SDT2 
+WHERE  TNRW <= 13
+AND  M.STN_ID = SDT2.STN_ID
+ORDER BY TMRN
+;"
+2,4,전기간 전지점 일단위 최저온도 18개,"SELECT * FROM (
+                    SELECT TO_CHAR(T.tm,'YYYYMMDD')|| ' ' ||TO_CHAR(T.TA_MIN_TM ,'0000')      AS 관측시각   
+                     ,S. STN_KO , S.STN_ID
+                     , TA_MIN AS   기온
+                    , ROW_NUMBER() OVER (PARTITION BY T.STN_ID ORDER BY TA_MIN desc) TNRW
+                    FROM  SFC_DAY_TA T
+                    ,  ( SELECT * FROM (
+                                                                SELECT S.* 
+                                                                ,ROW_NUMBER()  OVER (PARTITION BY STN_ID  ORDER BY TM_ED DESC  ) rnk
+                                                                FROM STN_AWS S    
+                                                            ) WHERE RNK = 1 ) S
+                    WHERE   1=1
+                    AND  T.STN_ID = S.STN_ID
+                    AND   TA_MIN IS NOT NULL   ) M    
+            , (SELECT STN_ID , DENSE_RANK()   OVER ( ORDER BY TA_MIN desc) TMRN
+         FROM (SELECT TM , STN_ID , TA_MIN, RANK()   OVER ( PARTITION BY STN_ID    ORDER BY TA_MIN desc) TRN  
+                    FROM  SFC_DAY_TA  DT WHERE TA_MIN IS NOT NULL  )  SDT
+          WHERE TRN = 1  ) SDT2 
+WHERE  TNRW <= 18
+AND  M.STN_ID = SDT2.STN_ID
+ORDER BY TMRN
+;"
+3,1,2013년부터 2015년까지 일단위 최고온도 12개,"SELECT * FROM (
+                    SELECT TO_CHAR(T.tm,'YYYYMMDD')|| ' ' ||TO_CHAR(T.TA_MAX_TM ,'0000')      AS 관측시각   
+                     ,S. STN_KO , S.STN_ID
+                     , TA_MAX AS   기온
+                    , ROW_NUMBER() OVER (PARTITION BY T.STN_ID ORDER BY TA_MAX desc) TNRW
+                    FROM  SFC_DAY_TA T
+                    ,  ( SELECT * FROM (
+                                                                SELECT S.* 
+                                                                ,ROW_NUMBER()  OVER (PARTITION BY STN_ID  ORDER BY TM_ED DESC  ) rnk
+                                                                FROM STN_AWS S    
+                                                            ) WHERE RNK = 1 ) S
+                    WHERE 1=1
+                    AND  T.STN_ID = S.STN_ID
+                    AND   TA_MAX IS NOT NULL
+                    AND   TO_CHAR(TM,'YYYY') BETWEEN '2013' and '2015'
+                    ) M    
+            , (SELECT STN_ID , DENSE_RANK()   OVER ( ORDER BY TA_MAX desc) TMRN
+         FROM (SELECT TM , STN_ID , TA_MAX, RANK()   OVER ( PARTITION BY STN_ID    ORDER BY TA_MAX desc) TRN  
+                    FROM  SFC_DAY_TA  DT 
+                    WHERE TA_MAX IS NOT NULL
+                    AND  TO_CHAR(TM,'YYYY') BETWEEN '2013' and '2015'
+                    )  SDT
+          WHERE TRN = 1  ) SDT2 
+WHERE  TNRW <= 12 
+AND  M.STN_ID = SDT2.STN_ID
+ORDER BY TMRN
+;"
+3,2,2013년 5월 15일부터 2013년 6월 29일까지 일단위 최고온도 3개,"SELECT * FROM (
+                    SELECT TO_CHAR(T.tm,'YYYYMMDD')|| ' ' ||TO_CHAR(T.TA_MAX_TM ,'0000')      AS 관측시각   
+                     ,S. STN_KO , S.STN_ID
+                     , TA_MAX AS   기온
+                    , ROW_NUMBER() OVER (PARTITION BY T.STN_ID ORDER BY TA_MAX desc) TNRW
+                    FROM  SFC_DAY_TA T
+                    ,  ( SELECT * FROM (
+                                                                SELECT S.* 
+                                                                ,ROW_NUMBER()  OVER (PARTITION BY STN_ID  ORDER BY TM_ED DESC  ) rnk
+                                                                FROM STN_AWS S    
+                                                            ) WHERE RNK = 1 ) S
+                    WHERE 1=1
+                    AND  T.STN_ID = S.STN_ID
+                    AND   TA_MAX IS NOT NULL
+                    AND   TO_CHAR(TM,'YYYYMMDD') BETWEEN '20130515' AND '20130629'
+                    ) M    
+            , (SELECT STN_ID , DENSE_RANK()   OVER ( ORDER BY TA_MAX desc) TMRN
+         FROM (SELECT TM , STN_ID , TA_MAX, RANK()   OVER ( PARTITION BY STN_ID    ORDER BY TA_MAX desc) TRN  
+                    FROM  SFC_DAY_TA  DT 
+                    WHERE TA_MAX IS NOT NULL
+                    AND  TO_CHAR(TM,'YYYYMMDD') BETWEEN '20130515' AND '20130629'
+                    )  SDT
+          WHERE TRN = 1  ) SDT2 
+WHERE  TNRW <= 3
+AND  M.STN_ID = SDT2.STN_ID
+ORDER BY TMRN
+;"
+3,3,2013년 11월부터 2014년 12월까지 일단위 최고온도 12개,"SELECT * FROM (
+                    SELECT TO_CHAR(T.tm,'YYYYMMDD')|| ' ' ||TO_CHAR(T.TA_MAX_TM ,'0000')      AS 관측시각   
+                     ,S. STN_KO , S.STN_ID
+                     , TA_MAX AS   기온
+                    , ROW_NUMBER() OVER (PARTITION BY T.STN_ID ORDER BY TA_MAX desc) TNRW
+                    FROM  SFC_DAY_TA T
+                    ,  ( SELECT * FROM (
+                                                                SELECT S.* 
+                                                                ,ROW_NUMBER()  OVER (PARTITION BY STN_ID  ORDER BY TM_ED DESC  ) rnk
+                                                                FROM STN_AWS S    
+                                                            ) WHERE RNK = 1 ) S
+                    WHERE 1=1
+                    AND  T.STN_ID = S.STN_ID
+                    AND   TA_MAX IS NOT NULL
+                    AND   TO_CHAR(TM,'YYYYMM') BETWEEN '201311' and '201412'
+                    ) M    
+            , (SELECT STN_ID , DENSE_RANK()   OVER ( ORDER BY TA_MAX desc) TMRN
+         FROM (SELECT TM , STN_ID , TA_MAX, RANK()   OVER ( PARTITION BY STN_ID    ORDER BY TA_MAX desc) TRN  
+                    FROM  SFC_DAY_TA  DT 
+                    WHERE TA_MAX IS NOT NULL
+                    AND  TO_CHAR(TM,'YYYYMM') BETWEEN '201311' and '201412'
+                    )  SDT
+          WHERE TRN = 1  ) SDT2 
+WHERE  TNRW <= 12 
+AND  M.STN_ID = SDT2.STN_ID
+ORDER BY TMRN
+;"
+3,4,2012년 7월 15일부터 2020년 6월 18일까지 일단위 최고온도 8개,"SELECT * FROM (
+                    SELECT TO_CHAR(T.tm,'YYYYMMDD')|| ' ' ||TO_CHAR(T.TA_MAX_TM ,'0000')      AS 관측시각   
+                     ,S. STN_KO , S.STN_ID
+                     , TA_MAX AS   기온
+                    , ROW_NUMBER() OVER (PARTITION BY T.STN_ID ORDER BY TA_MAX desc) TNRW
+                    FROM  SFC_DAY_TA T
+                    ,  ( SELECT * FROM (
+                                                                SELECT S.* 
+                                                                ,ROW_NUMBER()  OVER (PARTITION BY STN_ID  ORDER BY TM_ED DESC  ) rnk
+                                                                FROM STN_AWS S    
+                                                            ) WHERE RNK = 1 ) S
+                    WHERE 1=1
+                    AND  T.STN_ID = S.STN_ID
+                    AND   TA_MAX IS NOT NULL
+                    AND   TO_CHAR(TM,'YYYYMMDD') BETWEEN '20120715' AND '20200618'
+                    ) M    
+            , (SELECT STN_ID , DENSE_RANK()   OVER ( ORDER BY TA_MAX desc) TMRN
+         FROM (SELECT TM , STN_ID , TA_MAX, RANK()   OVER ( PARTITION BY STN_ID    ORDER BY TA_MAX desc) TRN  
+                    FROM  SFC_DAY_TA  DT 
+                    WHERE TA_MAX IS NOT NULL
+                    AND  TO_CHAR(TM,'YYYYMMDD') BETWEEN '20120715' AND '20200618'
+                    )  SDT
+          WHERE TRN = 1  ) SDT2 
+WHERE  TNRW <= 8
+AND  M.STN_ID = SDT2.STN_ID
+ORDER BY TMRN
+;"
+4,1,2013년 4월 29일부터 2013년 6월 13일까지 일단위 최저온도 2개,"SELECT * FROM (
+                    SELECT TO_CHAR(T.tm,'YYYYMMDD')|| ' ' ||TO_CHAR(T.TA_MIN_TM ,'0000')      AS 관측시각   
+                     ,S. STN_KO , S.STN_ID
+                     , TA_MIN AS   기온
+                    , ROW_NUMBER() OVER (PARTITION BY T.STN_ID ORDER BY TA_MIN desc) TNRW
+                    FROM  SFC_DAY_TA T
+                    ,  ( SELECT * FROM (
+                                                                SELECT S.* 
+                                                                ,ROW_NUMBER()  OVER (PARTITION BY STN_ID  ORDER BY TM_ED DESC  ) rnk
+                                                                FROM STN_AWS S    
+                                                            ) WHERE RNK = 1 ) S
+                    WHERE 1=1
+                    AND  T.STN_ID = S.STN_ID
+                    AND   TA_MIN IS NOT NULL
+                    AND   TO_CHAR(TM,'YYYYMMDD') BETWEEN '20130429' AND '20130613'
+                    ) M    
+            , (SELECT STN_ID , DENSE_RANK()   OVER ( ORDER BY TA_MIN desc) TMRN
+         FROM (SELECT TM , STN_ID , TA_MIN, RANK()   OVER ( PARTITION BY STN_ID    ORDER BY TA_MIN desc) TRN  
+                    FROM  SFC_DAY_TA  DT 
+                    WHERE TA_MIN IS NOT NULL
+                    AND  TO_CHAR(TM,'YYYYMMDD') BETWEEN '20130429' AND '20130613'
+                    )  SDT
+          WHERE TRN = 1  ) SDT2 
+WHERE  TNRW <= 2
+AND  M.STN_ID = SDT2.STN_ID
+ORDER BY TMRN
+;"
+4,2,2013년 5월 21일부터 2014년 5월 13일까지 일단위 최저온도 5개,"SELECT * FROM (
+                    SELECT TO_CHAR(T.tm,'YYYYMMDD')|| ' ' ||TO_CHAR(T.TA_MIN_TM ,'0000')      AS 관측시각   
+                     ,S. STN_KO , S.STN_ID
+                     , TA_MIN AS   기온
+                    , ROW_NUMBER() OVER (PARTITION BY T.STN_ID ORDER BY TA_MIN desc) TNRW
+                    FROM  SFC_DAY_TA T
+                    ,  ( SELECT * FROM (
+                                                                SELECT S.* 
+                                                                ,ROW_NUMBER()  OVER (PARTITION BY STN_ID  ORDER BY TM_ED DESC  ) rnk
+                                                                FROM STN_AWS S    
+                                                            ) WHERE RNK = 1 ) S
+                    WHERE 1=1
+                    AND  T.STN_ID = S.STN_ID
+                    AND   TA_MIN IS NOT NULL
+                    AND   TO_CHAR(TM,'YYYYMMDD') BETWEEN '20130521' AND '20140513'
+                    ) M    
+            , (SELECT STN_ID , DENSE_RANK()   OVER ( ORDER BY TA_MIN desc) TMRN
+         FROM (SELECT TM , STN_ID , TA_MIN, RANK()   OVER ( PARTITION BY STN_ID    ORDER BY TA_MIN desc) TRN  
+                    FROM  SFC_DAY_TA  DT 
+                    WHERE TA_MIN IS NOT NULL
+                    AND  TO_CHAR(TM,'YYYYMMDD') BETWEEN '20130521' AND '20140513'
+                    )  SDT
+          WHERE TRN = 1  ) SDT2 
+WHERE  TNRW <= 5
+AND  M.STN_ID = SDT2.STN_ID
+ORDER BY TMRN
+;"
+4,3,2013년 4월 31일부터 2013년 5월 11일까지 일단위 최저온도 10개,"SELECT * FROM (
+                    SELECT TO_CHAR(T.tm,'YYYYMMDD')|| ' ' ||TO_CHAR(T.TA_MIN_TM ,'0000')      AS 관측시각   
+                     ,S. STN_KO , S.STN_ID
+                     , TA_MIN AS   기온
+                    , ROW_NUMBER() OVER (PARTITION BY T.STN_ID ORDER BY TA_MIN desc) TNRW
+                    FROM  SFC_DAY_TA T
+                    ,  ( SELECT * FROM (
+                                                                SELECT S.* 
+                                                                ,ROW_NUMBER()  OVER (PARTITION BY STN_ID  ORDER BY TM_ED DESC  ) rnk
+                                                                FROM STN_AWS S    
+                                                            ) WHERE RNK = 1 ) S
+                    WHERE 1=1
+                    AND  T.STN_ID = S.STN_ID
+                    AND   TA_MIN IS NOT NULL
+                    AND   TO_CHAR(TM,'YYYYMMDD') BETWEEN '20130431' AND '20130511'
+                    ) M    
+            , (SELECT STN_ID , DENSE_RANK()   OVER ( ORDER BY TA_MIN desc) TMRN
+         FROM (SELECT TM , STN_ID , TA_MIN, RANK()   OVER ( PARTITION BY STN_ID    ORDER BY TA_MIN desc) TRN  
+                    FROM  SFC_DAY_TA  DT 
+                    WHERE TA_MIN IS NOT NULL
+                    AND  TO_CHAR(TM,'YYYYMMDD') BETWEEN '20130431' AND '20130511'
+                    )  SDT
+          WHERE TRN = 1  ) SDT2 
+WHERE  TNRW <= 10
+AND  M.STN_ID = SDT2.STN_ID
+ORDER BY TMRN
+;"
+4,4,2011년부터 2014년까지 일단위 최저온도 15개,"SELECT * FROM (
+                    SELECT TO_CHAR(T.tm,'YYYYMMDD')|| ' ' ||TO_CHAR(T.TA_MIN_TM ,'0000')      AS 관측시각   
+                     ,S. STN_KO , S.STN_ID
+                     , TA_MIN AS   기온
+                    , ROW_NUMBER() OVER (PARTITION BY T.STN_ID ORDER BY TA_MIN desc) TNRW
+                    FROM  SFC_DAY_TA T
+                    ,  ( SELECT * FROM (
+                                                                SELECT S.* 
+                                                                ,ROW_NUMBER()  OVER (PARTITION BY STN_ID  ORDER BY TM_ED DESC  ) rnk
+                                                                FROM STN_AWS S    
+                                                            ) WHERE RNK = 1 ) S
+                    WHERE 1=1
+                    AND  T.STN_ID = S.STN_ID
+                    AND   TA_MIN IS NOT NULL
+                    AND   TO_CHAR(TM,'YYYY') BETWEEN '2011' AND '2014'
+                    ) M    
+            , (SELECT STN_ID , DENSE_RANK()   OVER ( ORDER BY TA_MIN desc) TMRN
+         FROM (SELECT TM , STN_ID , TA_MIN, RANK()   OVER ( PARTITION BY STN_ID    ORDER BY TA_MIN desc) TRN  
+                    FROM  SFC_DAY_TA  DT 
+                    WHERE TA_MIN IS NOT NULL
+                    AND  TO_CHAR(TM,'YYYY') BETWEEN '2011' AND '2014'
+                    )  SDT
+          WHERE TRN = 1  ) SDT2 
+WHERE  TNRW <= 15
+AND  M.STN_ID = SDT2.STN_ID
+ORDER BY TMRN
+;"
+5,1,서귀포 전기간 일단위 최고온도 2개,"SELECT * FROM (
+SELECT  TO_CHAR(T.tm,'YYYYMMDD')|| ' ' ||TO_CHAR(T.TA_MAX_TM ,'0000')      AS 관측시각   
+,S. STN_KO  , S.STN_ID
+ , TA_MAX AS   기온
+,  ROW_NUMBER()   OVER ( ORDER BY TA_MAX desc) TNRW
+FROM  SFC_DAY_TA T
+,  ( SELECT * FROM (
+                                            SELECT S.* 
+                                            ,ROW_NUMBER()  OVER (PARTITION BY STN_ID  ORDER BY TM_ED DESC  ) rnk
+                                            FROM STN_AWS S   
+                                            WHERE   S.STN_KO ='서귀포'
+                                        ) WHERE RNK = 1 ) S
+WHERE 1=1
+AND  T.STN_ID = S.STN_ID
+AND   TA_MAX IS NOT NULL)
+WHERE TNRW <=2
+ORDER BY TNRW
+;"
+5,2,대전 전기간 일단위 최고온도 23개,"SELECT * FROM (
+SELECT  TO_CHAR(T.tm,'YYYYMMDD')|| ' ' ||TO_CHAR(T.TA_MAX_TM ,'0000')      AS 관측시각   
+,S. STN_KO  , S.STN_ID
+ , TA_MAX AS   기온
+,  ROW_NUMBER()   OVER ( ORDER BY TA_MAX desc) TNRW
+FROM  SFC_DAY_TA T
+,  ( SELECT * FROM (
+                                            SELECT S.* 
+                                            ,ROW_NUMBER()  OVER (PARTITION BY STN_ID  ORDER BY TM_ED DESC  ) rnk
+                                            FROM STN_AWS S   
+                                            WHERE   S.STN_KO = '대전'
+                                        ) WHERE RNK = 1 ) S
+WHERE 1=1
+AND  T.STN_ID = S.STN_ID
+AND   TA_MAX IS NOT NULL)
+WHERE TNRW <=23
+ORDER BY TNRW
+;"
+5,3,부산 전기간 일단위 최고온도 12개,"SELECT * FROM (
+SELECT  TO_CHAR(T.tm,'YYYYMMDD')|| ' ' ||TO_CHAR(T.TA_MAX_TM ,'0000')      AS 관측시각   
+,S. STN_KO  , S.STN_ID
+ , TA_MAX AS   기온
+,  ROW_NUMBER()   OVER ( ORDER BY TA_MAX desc) TNRW
+FROM  SFC_DAY_TA T
+,  ( SELECT * FROM (
+                                            SELECT S.* 
+                                            ,ROW_NUMBER()  OVER (PARTITION BY STN_ID  ORDER BY TM_ED DESC  ) rnk
+                                            FROM STN_AWS S   
+                                            WHERE   S.STN_KO ='부산'
+                                        ) WHERE RNK = 1 ) S
+WHERE 1=1
+AND  T.STN_ID = S.STN_ID
+AND   TA_MAX IS NOT NULL)
+WHERE TNRW <=12
+ORDER BY TNRW
+;"
+5,4,속초 전기간 일단위 최고온도 30개,"SELECT * FROM (
+SELECT  TO_CHAR(T.tm,'YYYYMMDD')|| ' ' ||TO_CHAR(T.TA_MAX_TM ,'0000')      AS 관측시각   
+,S. STN_KO  , S.STN_ID
+ , TA_MAX AS   기온
+,  ROW_NUMBER()   OVER ( ORDER BY TA_MAX desc) TNRW
+FROM  SFC_DAY_TA T
+,  ( SELECT * FROM (
+                                            SELECT S.* 
+                                            ,ROW_NUMBER()  OVER (PARTITION BY STN_ID  ORDER BY TM_ED DESC  ) rnk
+                                            FROM STN_AWS S   
+                                            WHERE   S.STN_KO = '속초'
+                                        ) WHERE RNK = 1 ) S
+WHERE 1=1
+AND  T.STN_ID = S.STN_ID
+AND   TA_MAX IS NOT NULL)
+WHERE TNRW <=30
+ORDER BY TNRW
+;"
+6,1,"고산, 제주 전기간 일단위 최저온도 13개","SELECT * FROM (
+SELECT  TO_CHAR(T.tm,'YYYYMMDD')|| ' ' ||TO_CHAR(T.TA_MIN_TM ,'0000')      AS 관측시각   
+,S. STN_KO  , S.STN_ID
+ , TA_MIN AS   기온
+,  ROW_NUMBER()   OVER ( ORDER BY TA_MIN desc) TNRW
+FROM  SFC_DAY_TA T
+,  ( SELECT * FROM (
+                                            SELECT S.* 
+                                            ,ROW_NUMBER()  OVER (PARTITION BY STN_ID  ORDER BY TM_ED DESC  ) rnk
+                                            FROM STN_AWS S   
+                                            WHERE   S.STN_KO IN ('고산', '제주')
+                                        ) WHERE RNK = 1 ) S
+WHERE 1=1
+AND  T.STN_ID = S.STN_ID
+AND   TA_MIN IS NOT NULL)
+WHERE TNRW <= 13
+ORDER BY TNRW
+;"
+6,2,"제주, 부산, 강릉 전기간 일단위 최저온도 16개","SELECT * FROM (
+SELECT  TO_CHAR(T.tm,'YYYYMMDD')|| ' ' ||TO_CHAR(T.TA_MIN_TM ,'0000')      AS 관측시각   
+,S. STN_KO  , S.STN_ID
+ , TA_MIN AS   기온
+,  ROW_NUMBER()   OVER ( ORDER BY TA_MIN desc) TNRW
+FROM  SFC_DAY_TA T
+,  ( SELECT * FROM (
+                                            SELECT S.* 
+                                            ,ROW_NUMBER()  OVER (PARTITION BY STN_ID  ORDER BY TM_ED DESC  ) rnk
+                                            FROM STN_AWS S   
+                                            WHERE   S.STN_KO IN ('제주', '부산', '강릉')
+                                        ) WHERE RNK = 1 ) S
+WHERE 1=1
+AND  T.STN_ID = S.STN_ID
+AND   TA_MIN IS NOT NULL)
+WHERE TNRW <= 16
+ORDER BY TNRW
+;"
+6,3,"대구, 포항 전기간 일단위 최저온도 9개","SELECT * FROM (
+SELECT  TO_CHAR(T.tm,'YYYYMMDD')|| ' ' ||TO_CHAR(T.TA_MIN_TM ,'0000')      AS 관측시각   
+,S. STN_KO  , S.STN_ID
+ , TA_MIN AS   기온
+,  ROW_NUMBER()   OVER ( ORDER BY TA_MIN desc) TNRW
+FROM  SFC_DAY_TA T
+,  ( SELECT * FROM (
+                                            SELECT S.* 
+                                            ,ROW_NUMBER()  OVER (PARTITION BY STN_ID  ORDER BY TM_ED DESC  ) rnk
+                                            FROM STN_AWS S   
+                                            WHERE   S.STN_KO IN ('대구', '포항')
+                                        ) WHERE RNK = 1 ) S
+WHERE 1=1
+AND  T.STN_ID = S.STN_ID
+AND   TA_MIN IS NOT NULL)
+WHERE TNRW <= 9
+ORDER BY TNRW
+;"
+6,4,여수 전기간 일단위 최저온도 16개,"SELECT * FROM (
+SELECT  TO_CHAR(T.tm,'YYYYMMDD')|| ' ' ||TO_CHAR(T.TA_MIN_TM ,'0000')      AS 관측시각   
+,S. STN_KO  , S.STN_ID
+ , TA_MIN AS   기온
+,  ROW_NUMBER()   OVER ( ORDER BY TA_MIN desc) TNRW
+FROM  SFC_DAY_TA T
+,  ( SELECT * FROM (
+                                            SELECT S.* 
+                                            ,ROW_NUMBER()  OVER (PARTITION BY STN_ID  ORDER BY TM_ED DESC  ) rnk
+                                            FROM STN_AWS S   
+                                            WHERE   S.STN_KO IN ('여수')
+                                        ) WHERE RNK = 1 ) S
+WHERE 1=1
+AND  T.STN_ID = S.STN_ID
+AND   TA_MIN IS NOT NULL)
+WHERE TNRW <= 16
+ORDER BY TNRW
+;"
+7,1,전기간 전지점 (6월)월단위 최고온도 20개,"select * from (
+    SELECT r.* 
+   , ROW_NUMBER() OVER (PARTITION BY STN_ID  ORDER BY TA_MAX  desc ) stnrw
+    FROM 
+    (
+            SELECT TO_CHAR(T.tm,'YYYYMMDD')|| ' ' ||TO_CHAR(T.TA_MAX_TM ,'0000')      AS 관측시각   
+            ,  TO_CHAR(T.tm,'YYYYMM')  관측월
+             ,S. STN_KO , S.STN_ID
+             , TA_MAX 
+            , DENSE_RANK() OVER (PARTITION BY T.STN_ID   ,  TO_CHAR(T.tm,'YYYYMM') ORDER BY TA_MAX  desc) TNRW
+            
+            FROM  SFC_DAY_TA  T
+            ,  ( SELECT * FROM (
+                                                        SELECT S.* 
+                                                        ,ROW_NUMBER()  OVER (PARTITION BY STN_ID  ORDER BY TM_ED DESC  ) rnk
+                                                        FROM STN_AWS S    
+                                                    ) WHERE RNK = 1 ) S
+            WHERE TO_CHAR(T.tm,'MM') = '06'
+            AND  T.STN_ID = S.STN_ID        
+            AND   TA_MAX  IS NOT NULL
+            ) r
+        WHERE TNRW =1       
+) M             , (SELECT STN_ID , DENSE_RANK()   OVER ( ORDER BY TA_MAX desc) TMRN
+         FROM (SELECT TM , STN_ID , TA_MAX, RANK()   OVER ( PARTITION BY STN_ID     ,  TO_CHAR(tm,'MM') ORDER BY TA_MAX desc) TRN  
+                    FROM  SFC_DAY_TA  DT 
+                    WHERE TA_MAX IS NOT NULL 
+                    AND TO_CHAR(TM,'MM') = '06')  SDT
+          WHERE TRN = 1  ) SDT2 
+where stnrw <= 20
+AND  M.STN_ID = SDT2.STN_ID
+;"
+7,2,전기간 전지점 (5월)월단위 최고온도 13개,"select * from (
+    SELECT r.* 
+   , ROW_NUMBER() OVER (PARTITION BY STN_ID  ORDER BY TA_MAX  desc ) stnrw
+    FROM 
+    (
+            SELECT TO_CHAR(T.tm,'YYYYMMDD')|| ' ' ||TO_CHAR(T.TA_MAX_TM ,'0000')      AS 관측시각   
+            ,  TO_CHAR(T.tm,'YYYYMM')  관측월
+             ,S. STN_KO , S.STN_ID
+             , TA_MAX 
+            , DENSE_RANK() OVER (PARTITION BY T.STN_ID   ,  TO_CHAR(T.tm,'YYYYMM') ORDER BY TA_MAX  desc) TNRW
+            
+            FROM  SFC_DAY_TA  T
+            ,  ( SELECT * FROM (
+                                                        SELECT S.* 
+                                                        ,ROW_NUMBER()  OVER (PARTITION BY STN_ID  ORDER BY TM_ED DESC  ) rnk
+                                                        FROM STN_AWS S    
+                                                    ) WHERE RNK = 1 ) S
+            WHERE TO_CHAR(T.tm,'MM') = '05'
+            AND  T.STN_ID = S.STN_ID        
+            AND   TA_MAX  IS NOT NULL
+            ) r
+        WHERE TNRW =1       
+) M             , (SELECT STN_ID , DENSE_RANK()   OVER ( ORDER BY TA_MAX desc) TMRN
+         FROM (SELECT TM , STN_ID , TA_MAX, RANK()   OVER ( PARTITION BY STN_ID     ,  TO_CHAR(tm,'MM') ORDER BY TA_MAX desc) TRN  
+                    FROM  SFC_DAY_TA  DT 
+                    WHERE TA_MAX IS NOT NULL 
+                    AND TO_CHAR(TM,'MM') = '05')  SDT
+          WHERE TRN = 1  ) SDT2 
+where stnrw <= 13
+AND  M.STN_ID = SDT2.STN_ID
+;"
+7,3,전기간 전지점 (7월)월단위 최고온도 19개,"select * from (
+    SELECT r.* 
+   , ROW_NUMBER() OVER (PARTITION BY STN_ID  ORDER BY TA_MAX  desc ) stnrw
+    FROM 
+    (
+            SELECT TO_CHAR(T.tm,'YYYYMMDD')|| ' ' ||TO_CHAR(T.TA_MAX_TM ,'0000')      AS 관측시각   
+            ,  TO_CHAR(T.tm,'YYYYMM')  관측월
+             ,S. STN_KO , S.STN_ID
+             , TA_MAX 
+            , DENSE_RANK() OVER (PARTITION BY T.STN_ID   ,  TO_CHAR(T.tm,'YYYYMM') ORDER BY TA_MAX  desc) TNRW
+            
+            FROM  SFC_DAY_TA  T
+            ,  ( SELECT * FROM (
+                                                        SELECT S.* 
+                                                        ,ROW_NUMBER()  OVER (PARTITION BY STN_ID  ORDER BY TM_ED DESC  ) rnk
+                                                        FROM STN_AWS S    
+                                                    ) WHERE RNK = 1 ) S
+            WHERE TO_CHAR(T.tm,'MM') = '07'
+            AND  T.STN_ID = S.STN_ID        
+            AND   TA_MAX  IS NOT NULL
+            ) r
+        WHERE TNRW =1       
+) M             , (SELECT STN_ID , DENSE_RANK()   OVER ( ORDER BY TA_MAX desc) TMRN
+         FROM (SELECT TM , STN_ID , TA_MAX, RANK()   OVER ( PARTITION BY STN_ID     ,  TO_CHAR(tm,'MM') ORDER BY TA_MAX desc) TRN  
+                    FROM  SFC_DAY_TA  DT 
+                    WHERE TA_MAX IS NOT NULL 
+                    AND TO_CHAR(TM,'MM') = '07')  SDT
+          WHERE TRN = 1  ) SDT2 
+where stnrw <= 19
+AND  M.STN_ID = SDT2.STN_ID
+;"
+7,4,전기간 전지점 (11월)월단위 최고온도 200개,"select * from (
+    SELECT r.* 
+   , ROW_NUMBER() OVER (PARTITION BY STN_ID  ORDER BY TA_MAX  desc ) stnrw
+    FROM 
+    (
+            SELECT TO_CHAR(T.tm,'YYYYMMDD')|| ' ' ||TO_CHAR(T.TA_MAX_TM ,'0000')      AS 관측시각   
+            ,  TO_CHAR(T.tm,'YYYYMM')  관측월
+             ,S. STN_KO , S.STN_ID
+             , TA_MAX 
+            , DENSE_RANK() OVER (PARTITION BY T.STN_ID   ,  TO_CHAR(T.tm,'YYYYMM') ORDER BY TA_MAX  desc) TNRW
+            
+            FROM  SFC_DAY_TA  T
+            ,  ( SELECT * FROM (
+                                                        SELECT S.* 
+                                                        ,ROW_NUMBER()  OVER (PARTITION BY STN_ID  ORDER BY TM_ED DESC  ) rnk
+                                                        FROM STN_AWS S    
+                                                    ) WHERE RNK = 1 ) S
+            WHERE TO_CHAR(T.tm,'MM') = '11'
+            AND  T.STN_ID = S.STN_ID        
+            AND   TA_MAX  IS NOT NULL
+            ) r
+        WHERE TNRW =1       
+) M             , (SELECT STN_ID , DENSE_RANK()   OVER ( ORDER BY TA_MAX desc) TMRN
+         FROM (SELECT TM , STN_ID , TA_MAX, RANK()   OVER ( PARTITION BY STN_ID     ,  TO_CHAR(tm,'MM') ORDER BY TA_MAX desc) TRN  
+                    FROM  SFC_DAY_TA  DT 
+                    WHERE TA_MAX IS NOT NULL 
+                    AND TO_CHAR(TM,'MM') = '11')  SDT
+          WHERE TRN = 1  ) SDT2 
+where stnrw <= 200
+AND  M.STN_ID = SDT2.STN_ID
+;"
+8,1,전기간 전지점 (5월)월단위 최저온도 10개,"select * from (
+    SELECT r.* 
+   , ROW_NUMBER() OVER (PARTITION BY STN_ID  ORDER BY TA_MIN  desc ) stnrw
+    FROM 
+    (
+            SELECT TO_CHAR(T.tm,'YYYYMMDD')|| ' ' ||TO_CHAR(T.TA_MIN_TM ,'0000')      AS 관측시각   
+            ,  TO_CHAR(T.tm,'YYYYMM')  관측월
+             ,S. STN_KO , S.STN_ID
+             , TA_MIN
+            , DENSE_RANK() OVER (PARTITION BY T.STN_ID   ,  TO_CHAR(T.tm,'YYYYMM') ORDER BY TA_MIN  desc) TNRW
+            
+            FROM  SFC_DAY_TA  T
+            ,  ( SELECT * FROM (
+                                                        SELECT S.* 
+                                                        ,ROW_NUMBER()  OVER (PARTITION BY STN_ID  ORDER BY TM_ED DESC  ) rnk
+                                                        FROM STN_AWS S    
+                                                    ) WHERE RNK = 1 ) S
+            WHERE TO_CHAR(T.tm,'MM') = '05'
+            AND  T.STN_ID = S.STN_ID        
+            AND   TA_MIN  IS NOT NULL
+            ) r
+        WHERE TNRW =1       
+) M             , (SELECT STN_ID , DENSE_RANK()   OVER ( ORDER BY TA_MIN desc) TMRN
+         FROM (SELECT TM , STN_ID , TA_MIN, RANK()   OVER ( PARTITION BY STN_ID     ,  TO_CHAR(tm,'MM') ORDER BY TA_MIN desc) TRN  
+                    FROM  SFC_DAY_TA  DT 
+                    WHERE TA_MIN IS NOT NULL 
+                    AND TO_CHAR(TM,'MM') = '05')  SDT
+          WHERE TRN = 1  ) SDT2 
+where stnrw <= 10
+AND  M.STN_ID = SDT2.STN_ID
+;"
+8,2,전기간 전지점 (6월)월단위 최저온도 2개,"select * from (
+    SELECT r.* 
+   , ROW_NUMBER() OVER (PARTITION BY STN_ID  ORDER BY TA_MIN  desc ) stnrw
+    FROM 
+    (
+            SELECT TO_CHAR(T.tm,'YYYYMMDD')|| ' ' ||TO_CHAR(T.TA_MIN_TM ,'0000')      AS 관측시각   
+            ,  TO_CHAR(T.tm,'YYYYMM')  관측월
+             ,S. STN_KO , S.STN_ID
+             , TA_MIN
+            , DENSE_RANK() OVER (PARTITION BY T.STN_ID   ,  TO_CHAR(T.tm,'YYYYMM') ORDER BY TA_MIN  desc) TNRW
+            
+            FROM  SFC_DAY_TA  T
+            ,  ( SELECT * FROM (
+                                                        SELECT S.* 
+                                                        ,ROW_NUMBER()  OVER (PARTITION BY STN_ID  ORDER BY TM_ED DESC  ) rnk
+                                                        FROM STN_AWS S    
+                                                    ) WHERE RNK = 1 ) S
+            WHERE TO_CHAR(T.tm,'MM') = '05'
+            AND  T.STN_ID = S.STN_ID        
+            AND   TA_MIN  IS NOT NULL
+            ) r
+        WHERE TNRW =1       
+) M             , (SELECT STN_ID , DENSE_RANK()   OVER ( ORDER BY TA_MIN desc) TMRN
+         FROM (SELECT TM , STN_ID , TA_MIN, RANK()   OVER ( PARTITION BY STN_ID     ,  TO_CHAR(tm,'MM') ORDER BY TA_MIN desc) TRN  
+                    FROM  SFC_DAY_TA  DT 
+                    WHERE TA_MIN IS NOT NULL 
+                    AND TO_CHAR(TM,'MM') = '05')  SDT
+          WHERE TRN = 1  ) SDT2 
+where stnrw <= 10
+AND  M.STN_ID = SDT2.STN_ID
+;"
+8,3,전기간 전지점 (12월)월단위 최저온도 120개,"select * from (
+    SELECT r.* 
+   , ROW_NUMBER() OVER (PARTITION BY STN_ID  ORDER BY TA_MIN  desc ) stnrw
+    FROM 
+    (
+            SELECT TO_CHAR(T.tm,'YYYYMMDD')|| ' ' ||TO_CHAR(T.TA_MIN_TM ,'0000')      AS 관측시각   
+            ,  TO_CHAR(T.tm,'YYYYMM')  관측월
+             ,S. STN_KO , S.STN_ID
+             , TA_MIN
+            , DENSE_RANK() OVER (PARTITION BY T.STN_ID   ,  TO_CHAR(T.tm,'YYYYMM') ORDER BY TA_MIN  desc) TNRW
+            
+            FROM  SFC_DAY_TA  T
+            ,  ( SELECT * FROM (
+                                                        SELECT S.* 
+                                                        ,ROW_NUMBER()  OVER (PARTITION BY STN_ID  ORDER BY TM_ED DESC  ) rnk
+                                                        FROM STN_AWS S    
+                                                    ) WHERE RNK = 1 ) S
+            WHERE TO_CHAR(T.tm,'MM') = '12'
+            AND  T.STN_ID = S.STN_ID        
+            AND   TA_MIN  IS NOT NULL
+            ) r
+        WHERE TNRW =1       
+) M             , (SELECT STN_ID , DENSE_RANK()   OVER ( ORDER BY TA_MIN desc) TMRN
+         FROM (SELECT TM , STN_ID , TA_MIN, RANK()   OVER ( PARTITION BY STN_ID     ,  TO_CHAR(tm,'MM') ORDER BY TA_MIN desc) TRN  
+                    FROM  SFC_DAY_TA  DT 
+                    WHERE TA_MIN IS NOT NULL 
+                    AND TO_CHAR(TM,'MM') = '12')  SDT
+          WHERE TRN = 1  ) SDT2 
+where stnrw <= 120
+AND  M.STN_ID = SDT2.STN_ID
+;"
+8,4,전기간 전지점 (10월)월단위 최저온도 100개,"select * from (
+    SELECT r.* 
+   , ROW_NUMBER() OVER (PARTITION BY STN_ID  ORDER BY TA_MIN  desc ) stnrw
+    FROM 
+    (
+            SELECT TO_CHAR(T.tm,'YYYYMMDD')|| ' ' ||TO_CHAR(T.TA_MIN_TM ,'0000')      AS 관측시각   
+            ,  TO_CHAR(T.tm,'YYYYMM')  관측월
+             ,S. STN_KO , S.STN_ID
+             , TA_MIN
+            , DENSE_RANK() OVER (PARTITION BY T.STN_ID   ,  TO_CHAR(T.tm,'YYYYMM') ORDER BY TA_MIN  desc) TNRW
+            
+            FROM  SFC_DAY_TA  T
+            ,  ( SELECT * FROM (
+                                                        SELECT S.* 
+                                                        ,ROW_NUMBER()  OVER (PARTITION BY STN_ID  ORDER BY TM_ED DESC  ) rnk
+                                                        FROM STN_AWS S    
+                                                    ) WHERE RNK = 1 ) S
+            WHERE TO_CHAR(T.tm,'MM') = '10'
+            AND  T.STN_ID = S.STN_ID        
+            AND   TA_MIN  IS NOT NULL
+            ) r
+        WHERE TNRW =1       
+) M             , (SELECT STN_ID , DENSE_RANK()   OVER ( ORDER BY TA_MIN desc) TMRN
+         FROM (SELECT TM , STN_ID , TA_MIN, RANK()   OVER ( PARTITION BY STN_ID     ,  TO_CHAR(tm,'MM') ORDER BY TA_MIN desc) TRN  
+                    FROM  SFC_DAY_TA  DT 
+                    WHERE TA_MIN IS NOT NULL 
+                    AND TO_CHAR(TM,'MM') = '10')  SDT
+          WHERE TRN = 1  ) SDT2 
+where stnrw <= 100
+AND  M.STN_ID = SDT2.STN_ID
+;"
+9,1,서울 전기간 월단위(3월) 최고온도 1개,"select * from (
+    SELECT r.* 
+   , ROW_NUMBER() OVER (PARTITION BY STN_ID  ORDER BY TA_MAX  desc ) stnrw
+    FROM 
+    (
+            SELECT TO_CHAR(T.tm,'YYYYMMDD')|| ' ' ||TO_CHAR(T.TA_MAX_TM ,'0000')      AS 관측시각   
+            ,  TO_CHAR(T.tm,'YYYYMM')  관측월
+             ,S. STN_KO , S.STN_ID
+             , TA_MAX 
+            , DENSE_RANK() OVER (PARTITION BY T.STN_ID   ,  TO_CHAR(T.tm,'YYYYMM') ORDER BY TA_MAX  desc) TNRW
+            
+            FROM  SFC_DAY_TA  T
+            ,  ( SELECT * FROM (
+                                                        SELECT S.* 
+                                                        ,ROW_NUMBER()  OVER (PARTITION BY STN_ID  ORDER BY TM_ED DESC  ) rnk
+                                                        FROM STN_AWS S    
+                                                        WHERE S.STN_KO='서울'
+                                                    ) WHERE RNK = 1 ) S
+            WHERE TO_CHAR(T.tm,'MM') = '03'
+            AND  T.STN_ID = S.STN_ID        
+            AND   TA_MAX  IS NOT NULL
+            ) r
+        WHERE TNRW =1       
+) M             , (SELECT STN_ID , DENSE_RANK()   OVER ( ORDER BY TA_MAX desc) TMRN
+         FROM (SELECT TM , STN_ID , TA_MAX, RANK()   OVER ( PARTITION BY STN_ID     ,  TO_CHAR(tm,'MM') ORDER BY TA_MAX desc) TRN  
+                    FROM  SFC_DAY_TA  DT 
+                    WHERE TA_MAX IS NOT NULL 
+                    AND TO_CHAR(TM,'MM') = '03')  SDT
+          WHERE TRN = 1  ) SDT2 
+where stnrw <= 1
+AND  M.STN_ID = SDT2.STN_ID
+;"
+9,2,"서울, 대전, 부산, 강릉 전기간 월단위(6월) 최고온도 4개","select * from (
+    SELECT r.* 
+   , ROW_NUMBER() OVER (PARTITION BY STN_ID  ORDER BY TA_MAX  desc ) stnrw
+    FROM 
+    (
+            SELECT TO_CHAR(T.tm,'YYYYMMDD')|| ' ' ||TO_CHAR(T.TA_MAX_TM ,'0000')      AS 관측시각   
+            ,  TO_CHAR(T.tm,'YYYYMM')  관측월
+             ,S. STN_KO , S.STN_ID
+             , TA_MAX 
+            , DENSE_RANK() OVER (PARTITION BY T.STN_ID   ,  TO_CHAR(T.tm,'YYYYMM') ORDER BY TA_MAX  desc) TNRW
+            
+            FROM  SFC_DAY_TA  T
+            ,  ( SELECT * FROM (
+                                                        SELECT S.* 
+                                                        ,ROW_NUMBER()  OVER (PARTITION BY STN_ID  ORDER BY TM_ED DESC  ) rnk
+                                                        FROM STN_AWS S    
+                                                        WHERE S.STN_KO IN ('서울', '대전', '부산', '강릉')
+                                                    ) WHERE RNK = 1 ) S
+            WHERE TO_CHAR(T.tm,'MM') = '06'
+            AND  T.STN_ID = S.STN_ID        
+            AND   TA_MAX  IS NOT NULL
+            ) r
+        WHERE TNRW =1       
+) M             , (SELECT STN_ID , DENSE_RANK()   OVER ( ORDER BY TA_MAX desc) TMRN
+         FROM (SELECT TM , STN_ID , TA_MAX, RANK()   OVER ( PARTITION BY STN_ID     ,  TO_CHAR(tm,'MM') ORDER BY TA_MAX desc) TRN  
+                    FROM  SFC_DAY_TA  DT 
+                    WHERE TA_MAX IS NOT NULL 
+                    AND TO_CHAR(TM,'MM') = '06')  SDT
+          WHERE TRN = 1  ) SDT2 
+where stnrw <= 4
+AND  M.STN_ID = SDT2.STN_ID
+;"
+9,3,포항 전기간 월단위(12월) 최고온도 50개,"select * from (
+    SELECT r.* 
+   , ROW_NUMBER() OVER (PARTITION BY STN_ID  ORDER BY TA_MAX  desc ) stnrw
+    FROM 
+    (
+            SELECT TO_CHAR(T.tm,'YYYYMMDD')|| ' ' ||TO_CHAR(T.TA_MAX_TM ,'0000')      AS 관측시각   
+            ,  TO_CHAR(T.tm,'YYYYMM')  관측월
+             ,S. STN_KO , S.STN_ID
+             , TA_MAX 
+            , DENSE_RANK() OVER (PARTITION BY T.STN_ID   ,  TO_CHAR(T.tm,'YYYYMM') ORDER BY TA_MAX  desc) TNRW
+            
+            FROM  SFC_DAY_TA  T
+            ,  ( SELECT * FROM (
+                                                        SELECT S.* 
+                                                        ,ROW_NUMBER()  OVER (PARTITION BY STN_ID  ORDER BY TM_ED DESC  ) rnk
+                                                        FROM STN_AWS S    
+                                                        WHERE S.STN_KO='포항'
+                                                    ) WHERE RNK = 1 ) S
+            WHERE TO_CHAR(T.tm,'MM') = '12'
+            AND  T.STN_ID = S.STN_ID        
+            AND   TA_MAX  IS NOT NULL
+            ) r
+        WHERE TNRW =1       
+) M             , (SELECT STN_ID , DENSE_RANK()   OVER ( ORDER BY TA_MAX desc) TMRN
+         FROM (SELECT TM , STN_ID , TA_MAX, RANK()   OVER ( PARTITION BY STN_ID     ,  TO_CHAR(tm,'MM') ORDER BY TA_MAX desc) TRN  
+                    FROM  SFC_DAY_TA  DT 
+                    WHERE TA_MAX IS NOT NULL 
+                    AND TO_CHAR(TM,'MM') = '12')  SDT
+          WHERE TRN = 1  ) SDT2 
+where stnrw <= 50
+AND  M.STN_ID = SDT2.STN_ID
+;"
+9,4,"서울, 대전 전기간 월단위(8월) 최고온도 80개","select * from (
+    SELECT r.* 
+   , ROW_NUMBER() OVER (PARTITION BY STN_ID  ORDER BY TA_MAX  desc ) stnrw
+    FROM 
+    (
+            SELECT TO_CHAR(T.tm,'YYYYMMDD')|| ' ' ||TO_CHAR(T.TA_MAX_TM ,'0000')      AS 관측시각   
+            ,  TO_CHAR(T.tm,'YYYYMM')  관측월
+             ,S. STN_KO , S.STN_ID
+             , TA_MAX 
+            , DENSE_RANK() OVER (PARTITION BY T.STN_ID   ,  TO_CHAR(T.tm,'YYYYMM') ORDER BY TA_MAX  desc) TNRW
+            
+            FROM  SFC_DAY_TA  T
+            ,  ( SELECT * FROM (
+                                                        SELECT S.* 
+                                                        ,ROW_NUMBER()  OVER (PARTITION BY STN_ID  ORDER BY TM_ED DESC  ) rnk
+                                                        FROM STN_AWS S    
+                                                        WHERE S.STN_KO IN ('서울', '대전')
+                                                    ) WHERE RNK = 1 ) S
+            WHERE TO_CHAR(T.tm,'MM') = '08'
+            AND  T.STN_ID = S.STN_ID        
+            AND   TA_MAX  IS NOT NULL
+            ) r
+        WHERE TNRW =1       
+) M             , (SELECT STN_ID , DENSE_RANK()   OVER ( ORDER BY TA_MAX desc) TMRN
+         FROM (SELECT TM , STN_ID , TA_MAX, RANK()   OVER ( PARTITION BY STN_ID     ,  TO_CHAR(tm,'MM') ORDER BY TA_MAX desc) TRN  
+                    FROM  SFC_DAY_TA  DT 
+                    WHERE TA_MAX IS NOT NULL 
+                    AND TO_CHAR(TM,'MM') = '08')  SDT
+          WHERE TRN = 1  ) SDT2 
+where stnrw <= 80
+AND  M.STN_ID = SDT2.STN_ID
+;"
+10,1,"제주, 속초 전기간 월단위(02월) 최저온도 5개","select * from (
+    SELECT r.* 
+   , ROW_NUMBER() OVER (PARTITION BY STN_ID  ORDER BY TA_MIN  desc ) stnrw
+    FROM 
+    (
+            SELECT TO_CHAR(T.tm,'YYYYMMDD')|| ' ' ||TO_CHAR(T.TA_MIN_TM ,'0000')      AS 관측시각   
+            ,  TO_CHAR(T.tm,'YYYYMM')  관측월
+             ,S. STN_KO , S.STN_ID
+             , TA_MIN
+            , DENSE_RANK() OVER (PARTITION BY T.STN_ID   ,  TO_CHAR(T.tm,'YYYYMM') ORDER BY TA_MIN  desc) TNRW
+            
+            FROM  SFC_DAY_TA  T
+            ,  ( SELECT * FROM (
+                                                        SELECT S.* 
+                                                        ,ROW_NUMBER()  OVER (PARTITION BY STN_ID  ORDER BY TM_ED DESC  ) rnk
+                                                        FROM STN_AWS S    
+                                                        WHERE S.STN_KO  IN ('제주', '속초')
+                                                    ) WHERE RNK = 1 ) S
+            WHERE TO_CHAR(T.tm,'MM') = '02'
+            AND  T.STN_ID = S.STN_ID        
+            AND   TA_MIN  IS NOT NULL
+            ) r
+        WHERE TNRW =1       
+) M             , (SELECT STN_ID , DENSE_RANK()   OVER ( ORDER BY TA_MIN desc) TMRN
+         FROM (SELECT TM , STN_ID , TA_MIN, RANK()   OVER ( PARTITION BY STN_ID     ,  TO_CHAR(tm,'MM') ORDER BY TA_MIN desc) TRN  
+                    FROM  SFC_DAY_TA  DT 
+                    WHERE TA_MIN IS NOT NULL 
+                    AND TO_CHAR(TM,'MM') = '02')  SDT
+          WHERE TRN = 1  ) SDT2 
+where stnrw <= 5
+AND  M.STN_ID = SDT2.STN_ID
+;"
+10,2,"울산, 속초, 대전 전기간 월단위(6월) 최저온도 2개","select * from (
+    SELECT r.* 
+   , ROW_NUMBER() OVER (PARTITION BY STN_ID  ORDER BY TA_MIN  desc ) stnrw
+    FROM 
+    (
+            SELECT TO_CHAR(T.tm,'YYYYMMDD')|| ' ' ||TO_CHAR(T.TA_MIN_TM ,'0000')      AS 관측시각   
+            ,  TO_CHAR(T.tm,'YYYYMM')  관측월
+             ,S. STN_KO , S.STN_ID
+             , TA_MIN
+            , DENSE_RANK() OVER (PARTITION BY T.STN_ID   ,  TO_CHAR(T.tm,'YYYYMM') ORDER BY TA_MIN  desc) TNRW
+            
+            FROM  SFC_DAY_TA  T
+            ,  ( SELECT * FROM (
+                                                        SELECT S.* 
+                                                        ,ROW_NUMBER()  OVER (PARTITION BY STN_ID  ORDER BY TM_ED DESC  ) rnk
+                                                        FROM STN_AWS S    
+                                                        WHERE S.STN_KO  IN ('울산', '속초', '대전')
+                                                    ) WHERE RNK = 1 ) S
+            WHERE TO_CHAR(T.tm,'MM') = '06'
+            AND  T.STN_ID = S.STN_ID        
+            AND   TA_MIN  IS NOT NULL
+            ) r
+        WHERE TNRW =1       
+) M             , (SELECT STN_ID , DENSE_RANK()   OVER ( ORDER BY TA_MIN desc) TMRN
+         FROM (SELECT TM , STN_ID , TA_MIN, RANK()   OVER ( PARTITION BY STN_ID     ,  TO_CHAR(tm,'MM') ORDER BY TA_MIN desc) TRN  
+                    FROM  SFC_DAY_TA  DT 
+                    WHERE TA_MIN IS NOT NULL 
+                    AND TO_CHAR(TM,'MM') = '06')  SDT
+          WHERE TRN = 1  ) SDT2 
+where stnrw <= 2
+AND  M.STN_ID = SDT2.STN_ID
+;"
+10,3,서울 전기간 월단위(12월) 최저온도 30개,"select * from (
+    SELECT r.* 
+   , ROW_NUMBER() OVER (PARTITION BY STN_ID  ORDER BY TA_MIN  desc ) stnrw
+    FROM 
+    (
+            SELECT TO_CHAR(T.tm,'YYYYMMDD')|| ' ' ||TO_CHAR(T.TA_MIN_TM ,'0000')      AS 관측시각   
+            ,  TO_CHAR(T.tm,'YYYYMM')  관측월
+             ,S. STN_KO , S.STN_ID
+             , TA_MIN
+            , DENSE_RANK() OVER (PARTITION BY T.STN_ID   ,  TO_CHAR(T.tm,'YYYYMM') ORDER BY TA_MIN  desc) TNRW
+            
+            FROM  SFC_DAY_TA  T
+            ,  ( SELECT * FROM (
+                                                        SELECT S.* 
+                                                        ,ROW_NUMBER()  OVER (PARTITION BY STN_ID  ORDER BY TM_ED DESC  ) rnk
+                                                        FROM STN_AWS S    
+                                                        WHERE S.STN_KO  = '서울'
+                                                    ) WHERE RNK = 1 ) S
+            WHERE TO_CHAR(T.tm,'MM') = '12'
+            AND  T.STN_ID = S.STN_ID        
+            AND   TA_MIN  IS NOT NULL
+            ) r
+        WHERE TNRW =1       
+) M             , (SELECT STN_ID , DENSE_RANK()   OVER ( ORDER BY TA_MIN desc) TMRN
+         FROM (SELECT TM , STN_ID , TA_MIN, RANK()   OVER ( PARTITION BY STN_ID     ,  TO_CHAR(tm,'MM') ORDER BY TA_MIN desc) TRN  
+                    FROM  SFC_DAY_TA  DT 
+                    WHERE TA_MIN IS NOT NULL 
+                    AND TO_CHAR(TM,'MM') = '12')  SDT
+          WHERE TRN = 1  ) SDT2 
+where stnrw <= 30
+AND  M.STN_ID = SDT2.STN_ID
+;"
+10,4,포항 전기간 월단위(3월) 최저온도 20개,"select * from (
+    SELECT r.* 
+   , ROW_NUMBER() OVER (PARTITION BY STN_ID  ORDER BY TA_MIN  desc ) stnrw
+    FROM 
+    (
+            SELECT TO_CHAR(T.tm,'YYYYMMDD')|| ' ' ||TO_CHAR(T.TA_MIN_TM ,'0000')      AS 관측시각   
+            ,  TO_CHAR(T.tm,'YYYYMM')  관측월
+             ,S. STN_KO , S.STN_ID
+             , TA_MIN
+            , DENSE_RANK() OVER (PARTITION BY T.STN_ID   ,  TO_CHAR(T.tm,'YYYYMM') ORDER BY TA_MIN  desc) TNRW
+            
+            FROM  SFC_DAY_TA  T
+            ,  ( SELECT * FROM (
+                                                        SELECT S.* 
+                                                        ,ROW_NUMBER()  OVER (PARTITION BY STN_ID  ORDER BY TM_ED DESC  ) rnk
+                                                        FROM STN_AWS S    
+                                                        WHERE S.STN_KO  = '포항'
+                                                    ) WHERE RNK = 1 ) S
+            WHERE TO_CHAR(T.tm,'MM') = '03'
+            AND  T.STN_ID = S.STN_ID        
+            AND   TA_MIN  IS NOT NULL
+            ) r
+        WHERE TNRW =1       
+) M             , (SELECT STN_ID , DENSE_RANK()   OVER ( ORDER BY TA_MIN desc) TMRN
+         FROM (SELECT TM , STN_ID , TA_MIN, RANK()   OVER ( PARTITION BY STN_ID     ,  TO_CHAR(tm,'MM') ORDER BY TA_MIN desc) TRN  
+                    FROM  SFC_DAY_TA  DT 
+                    WHERE TA_MIN IS NOT NULL 
+                    AND TO_CHAR(TM,'MM') = '03')  SDT
+          WHERE TRN = 1  ) SDT2 
+where stnrw <= 20
+AND  M.STN_ID = SDT2.STN_ID
+;"
+11,1,당일(2021년 3월 14일) 전지점 일단위 최고온도 3개,"SELECT * FROM (
+SELECT  TO_CHAR(T.tm,'YYYYMMDD')|| ' ' ||TO_CHAR(T.TA_MAX_TM ,'0000')      AS 관측시각   
+,S. STN_KO  , S.STN_ID
+ , TA_MAX AS   기온
+,  DENSE_RANK()   OVER ( ORDER BY TA_MAX desc) TNRW
+FROM  SFC_DAY_TA T
+,  ( SELECT * FROM (
+                                            SELECT S.* 
+                                            ,ROW_NUMBER()  OVER (PARTITION BY STN_ID  ORDER BY TM_ED DESC  ) rnk
+                                            FROM STN_AWS S    
+                                        ) WHERE RNK = 1 ) S
+WHERE TO_CHAR(T.TM,'YYYYMMDD') = '20210314'
+AND  T.STN_ID = S.STN_ID
+AND   TA_MAX IS NOT NULL
+)
+WHERE TNRW <= 3
+
+ORDER BY TNRW
+;"
+11,2,당일(2021년 5월 13일) 전지점 일단위 최고온도 13개,"SELECT * FROM (
+SELECT  TO_CHAR(T.tm,'YYYYMMDD')|| ' ' ||TO_CHAR(T.TA_MAX_TM ,'0000')      AS 관측시각   
+,S. STN_KO  , S.STN_ID
+ , TA_MAX AS   기온
+,  DENSE_RANK()   OVER ( ORDER BY TA_MAX desc) TNRW
+FROM  SFC_DAY_TA T
+,  ( SELECT * FROM (
+                                            SELECT S.* 
+                                            ,ROW_NUMBER()  OVER (PARTITION BY STN_ID  ORDER BY TM_ED DESC  ) rnk
+                                            FROM STN_AWS S    
+                                        ) WHERE RNK = 1 ) S
+WHERE TO_CHAR(T.TM,'YYYYMMDD') = '20210513'
+AND  T.STN_ID = S.STN_ID
+AND   TA_MAX IS NOT NULL
+)
+WHERE TNRW <= 13
+
+ORDER BY TNRW
+;"
+11,3,당일(2020년 4월 18일) 전지점 일단위 최고온도 50개,"SELECT * FROM (
+SELECT  TO_CHAR(T.tm,'YYYYMMDD')|| ' ' ||TO_CHAR(T.TA_MAX_TM ,'0000')      AS 관측시각   
+,S. STN_KO  , S.STN_ID
+ , TA_MAX AS   기온
+,  DENSE_RANK()   OVER ( ORDER BY TA_MAX desc) TNRW
+FROM  SFC_DAY_TA T
+,  ( SELECT * FROM (
+                                            SELECT S.* 
+                                            ,ROW_NUMBER()  OVER (PARTITION BY STN_ID  ORDER BY TM_ED DESC  ) rnk
+                                            FROM STN_AWS S    
+                                        ) WHERE RNK = 1 ) S
+WHERE TO_CHAR(T.TM,'YYYYMMDD') = '20200418'
+AND  T.STN_ID = S.STN_ID
+AND   TA_MAX IS NOT NULL
+)
+WHERE TNRW <= 50
+
+ORDER BY TNRW
+;"
+11,4,당일(2013년 8월 3일) 전지점 일단위 최고온도 20개,"SELECT * FROM (
+SELECT  TO_CHAR(T.tm,'YYYYMMDD')|| ' ' ||TO_CHAR(T.TA_MAX_TM ,'0000')      AS 관측시각   
+,S. STN_KO  , S.STN_ID
+ , TA_MAX AS   기온
+,  DENSE_RANK()   OVER ( ORDER BY TA_MAX desc) TNRW
+FROM  SFC_DAY_TA T
+,  ( SELECT * FROM (
+                                            SELECT S.* 
+                                            ,ROW_NUMBER()  OVER (PARTITION BY STN_ID  ORDER BY TM_ED DESC  ) rnk
+                                            FROM STN_AWS S    
+                                        ) WHERE RNK = 1 ) S
+WHERE TO_CHAR(T.TM,'YYYYMMDD') = '20130803'
+AND  T.STN_ID = S.STN_ID
+AND   TA_MAX IS NOT NULL
+)
+WHERE TNRW <= 20
+
+ORDER BY TNRW
+;"
+12,1,당일(20210213) 전지점 일단위 최저온도 3개,"SELECT * FROM (
+SELECT  TO_CHAR(T.tm,'YYYYMMDD')|| ' ' ||TO_CHAR(T.TA_MIN_TM ,'0000')      AS 관측시각   
+,S. STN_KO  , S.STN_ID
+ , TA_MIN AS   기온
+,  DENSE_RANK()   OVER ( ORDER BY TA_MIN desc) TNRW
+FROM  SFC_DAY_TA T
+,  ( SELECT * FROM (
+                                            SELECT S.* 
+                                            ,ROW_NUMBER()  OVER (PARTITION BY STN_ID  ORDER BY TM_ED DESC  ) rnk
+                                            FROM STN_AWS S    
+                                        ) WHERE RNK = 1 ) S
+WHERE TO_CHAR(T.TM,'YYYYMMDD') = '20210213'
+AND  T.STN_ID = S.STN_ID
+AND   TA_MIN IS NOT NULL
+)
+WHERE TNRW <= 3
+
+ORDER BY TNRW
+;"
+12,2,당일(2013년 6월 17일) 전지점 일단위 최저온도 20개,"SELECT * FROM (
+SELECT  TO_CHAR(T.tm,'YYYYMMDD')|| ' ' ||TO_CHAR(T.TA_MIN_TM ,'0000')      AS 관측시각   
+,S. STN_KO  , S.STN_ID
+ , TA_MIN AS   기온
+,  DENSE_RANK()   OVER ( ORDER BY TA_MIN desc) TNRW
+FROM  SFC_DAY_TA T
+,  ( SELECT * FROM (
+                                            SELECT S.* 
+                                            ,ROW_NUMBER()  OVER (PARTITION BY STN_ID  ORDER BY TM_ED DESC  ) rnk
+                                            FROM STN_AWS S    
+                                        ) WHERE RNK = 1 ) S
+WHERE TO_CHAR(T.TM,'YYYYMMDD') = '20130617'
+AND  T.STN_ID = S.STN_ID
+AND   TA_MIN IS NOT NULL
+)
+WHERE TNRW <= 20
+
+ORDER BY TNRW
+;"
+12,3,당일(2010년 11월13일) 전지점 일단위 최저온도 30개,"SELECT * FROM (
+SELECT  TO_CHAR(T.tm,'YYYYMMDD')|| ' ' ||TO_CHAR(T.TA_MIN_TM ,'0000')      AS 관측시각   
+,S. STN_KO  , S.STN_ID
+ , TA_MIN AS   기온
+,  DENSE_RANK()   OVER ( ORDER BY TA_MIN desc) TNRW
+FROM  SFC_DAY_TA T
+,  ( SELECT * FROM (
+                                            SELECT S.* 
+                                            ,ROW_NUMBER()  OVER (PARTITION BY STN_ID  ORDER BY TM_ED DESC  ) rnk
+                                            FROM STN_AWS S    
+                                        ) WHERE RNK = 1 ) S
+WHERE TO_CHAR(T.TM,'YYYYMMDD') = '20101113'
+AND  T.STN_ID = S.STN_ID
+AND   TA_MIN IS NOT NULL
+)
+WHERE TNRW <= 30
+
+ORDER BY TNRW
+;"
+12,4,당일(2015년 4월 14일) 전지점 일단위 최저온도 10개,"SELECT * FROM (
+SELECT  TO_CHAR(T.tm,'YYYYMMDD')|| ' ' ||TO_CHAR(T.TA_MIN_TM ,'0000')      AS 관측시각   
+,S. STN_KO  , S.STN_ID
+ , TA_MIN AS   기온
+,  DENSE_RANK()   OVER ( ORDER BY TA_MIN desc) TNRW
+FROM  SFC_DAY_TA T
+,  ( SELECT * FROM (
+                                            SELECT S.* 
+                                            ,ROW_NUMBER()  OVER (PARTITION BY STN_ID  ORDER BY TM_ED DESC  ) rnk
+                                            FROM STN_AWS S    
+                                        ) WHERE RNK = 1 ) S
+WHERE TO_CHAR(T.TM,'YYYYMMDD') = '20150414'
+AND  T.STN_ID = S.STN_ID
+AND   TA_MIN IS NOT NULL
+)
+WHERE TNRW <= 10
+
+ORDER BY TNRW
+;"
+13,1,당일(20210809) 서울 일단위 최고온도 1개,"SELECT * FROM (
+SELECT  TO_CHAR(T.tm,'YYYYMMDD')|| ' ' ||TO_CHAR(T.TA_MAX_TM ,'0000')      AS 관측시각   
+,S. STN_KO  , S.STN_ID
+ , TA_MAX AS   기온
+,  DENSE_RANK()   OVER ( ORDER BY TA_MAX desc) TNRW
+FROM  SFC_DAY_TA T
+,  ( SELECT * FROM (
+                                            SELECT S.* 
+                                            ,ROW_NUMBER()  OVER (PARTITION BY STN_ID  ORDER BY TM_ED DESC  ) rnk
+                                            FROM STN_AWS S  
+                                            WHERE S.STN_KO='서울'
+                                        ) WHERE RNK = 1 ) S
+WHERE TO_CHAR(T.TM,'YYYYMMDD') = '20210809'
+AND  T.STN_ID = S.STN_ID
+AND   TA_MAX IS NOT NULL
+)
+WHERE TNRW <= 1
+
+ORDER BY TNRW
+;"
+13,2,"당일('20210911') 부산, 서귀포 일단위 최고온도 2개","SELECT * FROM (
+SELECT  TO_CHAR(T.tm,'YYYYMMDD')|| ' ' ||TO_CHAR(T.TA_MAX_TM ,'0000')      AS 관측시각   
+,S. STN_KO  , S.STN_ID
+ , TA_MAX AS   기온
+,  DENSE_RANK()   OVER ( ORDER BY TA_MAX desc) TNRW
+FROM  SFC_DAY_TA T
+,  ( SELECT * FROM (
+                                            SELECT S.* 
+                                            ,ROW_NUMBER()  OVER (PARTITION BY STN_ID  ORDER BY TM_ED DESC  ) rnk
+                                            FROM STN_AWS S  
+                                            WHERE S.STN_KO IN ('부산', '서귀포')
+                                        ) WHERE RNK = 1 ) S
+WHERE TO_CHAR(T.TM,'YYYYMMDD')= '20210911'
+AND  T.STN_ID = S.STN_ID
+AND   TA_MAX IS NOT NULL
+)
+WHERE TNRW <= 2
+
+ORDER BY TNRW
+;"
+13,3,당일(20210809) 서울 일단위 최고온도 1개,"SELECT * FROM (
+SELECT  TO_CHAR(T.tm,'YYYYMMDD')|| ' ' ||TO_CHAR(T.TA_MAX_TM ,'0000')      AS 관측시각   
+,S. STN_KO  , S.STN_ID
+ , TA_MAX AS   기온
+,  DENSE_RANK()   OVER ( ORDER BY TA_MAX desc) TNRW
+FROM  SFC_DAY_TA T
+,  ( SELECT * FROM (
+                                            SELECT S.* 
+                                            ,ROW_NUMBER()  OVER (PARTITION BY STN_ID  ORDER BY TM_ED DESC  ) rnk
+                                            FROM STN_AWS S  
+                                            WHERE S.STN_KO='서울'
+                                        ) WHERE RNK = 1 ) S
+WHERE TO_CHAR(T.TM,'YYYYMMDD') = '20210809'
+AND  T.STN_ID = S.STN_ID
+AND   TA_MAX IS NOT NULL
+)
+WHERE TNRW <= 1
+
+ORDER BY TNRW
+;"
+13,4,당일('20160314') 대전 일단위 최고온도 20개,"SELECT * FROM (
+SELECT  TO_CHAR(T.tm,'YYYYMMDD')|| ' ' ||TO_CHAR(T.TA_MAX_TM ,'0000')      AS 관측시각   
+,S. STN_KO  , S.STN_ID
+ , TA_MAX AS   기온
+,  DENSE_RANK()   OVER ( ORDER BY TA_MAX desc) TNRW
+FROM  SFC_DAY_TA T
+,  ( SELECT * FROM (
+                                            SELECT S.* 
+                                            ,ROW_NUMBER()  OVER (PARTITION BY STN_ID  ORDER BY TM_ED DESC  ) rnk
+                                            FROM STN_AWS S  
+                                            WHERE S.STN_KO = '대전'
+                                        ) WHERE RNK = 1 ) S
+WHERE TO_CHAR(T.TM,'YYYYMMDD')= '20160314'
+AND  T.STN_ID = S.STN_ID
+AND   TA_MAX IS NOT NULL
+)
+WHERE TNRW <= 20
+
+ORDER BY TNRW
+;"
+14,1,당일(20130617) 대전 일단위 최저온도 8개,"SELECT * FROM (
+SELECT  TO_CHAR(T.tm,'YYYYMMDD')|| ' ' ||TO_CHAR(T.TA_MIN_TM ,'0000')      AS 관측시각   
+,S. STN_KO  , S.STN_ID
+ , TA_MIN AS   기온
+,  DENSE_RANK()   OVER ( ORDER BY TA_MIN desc) TNRW
+FROM  SFC_DAY_TA T
+,  ( SELECT * FROM (
+                                            SELECT S.* 
+                                            ,ROW_NUMBER()  OVER (PARTITION BY STN_ID  ORDER BY TM_ED DESC  ) rnk
+                                            FROM STN_AWS S  
+                                            WHERE S.STN_KO = '대전'
+                                        ) WHERE RNK = 1 ) S
+WHERE TO_CHAR(T.TM,'YYYYMMDD') = '20130617'
+AND  T.STN_ID = S.STN_ID
+AND   TA_MIN IS NOT NULL
+)
+WHERE TNRW <= 8
+
+ORDER BY TNRW
+;"
+14,2,"당일(20130615) 포항, 대구, 울산, 여수 완도 일단위 최저온도 4개","SELECT * FROM (
+SELECT  TO_CHAR(T.tm,'YYYYMMDD')|| ' ' ||TO_CHAR(T.TA_MIN_TM ,'0000')      AS 관측시각   
+,S. STN_KO  , S.STN_ID
+ , TA_MIN AS   기온
+,  DENSE_RANK()   OVER ( ORDER BY TA_MIN desc) TNRW
+FROM  SFC_DAY_TA T
+,  ( SELECT * FROM (
+                                            SELECT S.* 
+                                            ,ROW_NUMBER()  OVER (PARTITION BY STN_ID  ORDER BY TM_ED DESC  ) rnk
+                                            FROM STN_AWS S  
+                                            WHERE S.STN_KO IN ('포항','대구','울산','여수','완도')
+                                        ) WHERE RNK = 1 ) S
+WHERE TO_CHAR(T.TM,'YYYYMMDD') = '20130615'
+AND  T.STN_ID = S.STN_ID
+AND   TA_MIN IS NOT NULL
+)
+WHERE TNRW <= 4
+
+ORDER BY TNRW
+;"
+14,3,당일(20201224) 서울 일단위 최저온도 80개,"SELECT * FROM (
+SELECT  TO_CHAR(T.tm,'YYYYMMDD')|| ' ' ||TO_CHAR(T.TA_MIN_TM ,'0000')      AS 관측시각   
+,S. STN_KO  , S.STN_ID
+ , TA_MIN AS   기온
+,  DENSE_RANK()   OVER ( ORDER BY TA_MIN desc) TNRW
+FROM  SFC_DAY_TA T
+,  ( SELECT * FROM (
+                                            SELECT S.* 
+                                            ,ROW_NUMBER()  OVER (PARTITION BY STN_ID  ORDER BY TM_ED DESC  ) rnk
+                                            FROM STN_AWS S  
+                                            WHERE S.STN_KO = '서울'
+                                        ) WHERE RNK = 1 ) S
+WHERE TO_CHAR(T.TM,'YYYYMMDD') = '20201224'
+AND  T.STN_ID = S.STN_ID
+AND   TA_MIN IS NOT NULL
+)
+WHERE TNRW <= 80
+
+ORDER BY TNRW
+;"
+14,4,당일(20120624) 부산 일단위 최저온도 50개,"SELECT * FROM (
+SELECT  TO_CHAR(T.tm,'YYYYMMDD')|| ' ' ||TO_CHAR(T.TA_MIN_TM ,'0000')      AS 관측시각   
+,S. STN_KO  , S.STN_ID
+ , TA_MIN AS   기온
+,  DENSE_RANK()   OVER ( ORDER BY TA_MIN desc) TNRW
+FROM  SFC_DAY_TA T
+,  ( SELECT * FROM (
+                                            SELECT S.* 
+                                            ,ROW_NUMBER()  OVER (PARTITION BY STN_ID  ORDER BY TM_ED DESC  ) rnk
+                                            FROM STN_AWS S  
+                                            WHERE S.STN_KO = '부산'
+                                        ) WHERE RNK = 1 ) S
+WHERE TO_CHAR(T.TM,'YYYYMMDD') = '20120624'
+AND  T.STN_ID = S.STN_ID
+AND   TA_MIN IS NOT NULL
+)
+WHERE TNRW <= 50
+
+ORDER BY TNRW
+;"

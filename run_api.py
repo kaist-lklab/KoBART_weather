@@ -156,7 +156,7 @@ def get_sql(input, templates):
     cosine_scores = util.pytorch_cos_sim(embeds, template_embeds)                                           
     indx = np.argmax((cosine_scores.numpy())[0])               
     input_template = index_to_input[indx]
-    ot = template_dict[input_template] #matched sql template          
+    output_template = template_dict[input_template] #matched sql template          
     checkpoints = []
     j=0
     # Getting checkpoints between matched template & input
@@ -165,6 +165,7 @@ def get_sql(input, templates):
             j_ = input[j:].index(input_template[i])
             j = j + j_
             checkpoints.append([i,j])
+    ot = output_template
     #Iterate through the checkpoints
     for i in range(len(checkpoints)-1):
         t1 = checkpoints[i][0]
@@ -177,10 +178,10 @@ def get_sql(input, templates):
             input_var = input[o1+1:o2]
             if template_var in ot:
                 ot = ot.replace(template_var, input_var)
-    return ot
-
-
-
+    if ot == output_template:
+        return []
+    else:
+        return ot
 
 if __name__ == '__main__':
     global model, model2
