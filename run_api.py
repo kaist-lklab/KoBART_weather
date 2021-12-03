@@ -176,7 +176,6 @@ def get_sql(input, templates):
             input_var = input[o1+1:o2]
             if template_var in ot:
                 if 'date' in template_var: #handling date
-                    input_var = '2021년도 12월 4일'
                     year_ = input_var.split('년도')
                     year = year_[0]
                     month_ = year_[1].split('월') 
