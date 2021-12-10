@@ -33,12 +33,8 @@ def process_request():
     output = response_template(get_output(text_input, templates))
     return output
 
-
-
-
-
-"""
-example = "KIM전구 K Index"
+'''
+example = "당일(2021년 1월 2일) 전지점 일단위 최고온도 30개"
 
 input = {
     "source" : example,
@@ -46,8 +42,7 @@ input = {
     "sourceType" : "text",
     "responseChannel": "aiw-response"
 }
-"""
-
+'''
 
 def get_template_embeddings(model):
     try:
@@ -176,12 +171,16 @@ def get_sql(input, templates):
             input_var = input[o1+1:o2]
             if template_var in ot:
                 if 'date' in template_var: #handling date
-                    year_ = input_var.split('년도')
+                    year_ = input_var.split('년')
                     year = year_[0]
                     month_ = year_[1].split('월') 
                     month = month_[0][1:]
+                    if len(month)==1:
+                        month = f'0{month}'
                     day_ = month_[1].split('일')
                     day = day_[0][1:]
+                    if len(day)==1:
+                        day = f'0{day}'
                     input_var = f"'{year+month+day}'"
                     ot = ot.replace(template_var, input_var)
                 elif 'month' in template_var:
@@ -221,10 +220,9 @@ if __name__ == '__main__':
     tokenizer = get_tokenizer()
     templates = get_template_embeddings(model2)
     app.run(host='0.0.0.0', port=portnum, debug=False)
-"""
+'''
 output = response_template(get_output(input))
 
 print('input:', input)
 print('output:', output)
-
-"""
+'''

@@ -47,15 +47,19 @@ def get_sql(input, templates):
         if (t1+1)!=t2:
             template_var = input_template[t1+1:t2]
             input_var = input[o1+1:o2]
+            print(input_var)
             if template_var in ot:
                 if 'date' in template_var: #handling date
-                    input_var = '2021년도 12월 4일'
-                    year_ = input_var.split('년도')
+                    year_ = input_var.split('년')
                     year = year_[0]
                     month_ = year_[1].split('월') 
                     month = month_[0][1:]
+                    if len(month)==1:
+                        month = f'0{month}'
                     day_ = month_[1].split('일')
                     day = day_[0][1:]
+                    if len(day)==1:
+                        day = f'0{day}'
                     input_var = f"'{year+month+day}'"
                     ot = ot.replace(template_var, input_var)
                 elif 'month' in template_var:
@@ -70,7 +74,7 @@ def get_sql(input, templates):
     if ot == output_template:
         return []
     else:
-        return [ot]
+        return ot
     
 def get_output(input, templates):
     text = input['source']
@@ -135,8 +139,6 @@ def response_template(res):
         output = output.replace('YYYYMMDDHHMI', year+month+day+hour+minute)
     else:
         output = output.replace("입력='YYYYMMDDHHMI'", '')
-    sql = sql.replace('YYYYMMDD', year+month+day)
-    sql = sql.replace('MMDD', month+day)
     response = {
         "pseudoList":[{
             "site":"COMIS",
@@ -169,7 +171,9 @@ def get_template_embeddings(model, data_dir):
 
 tokenizer = get_tokenizer()
 if __name__ == '__main__':
-    example = "2021-10-01 09:00 KIM전구 K Index"
+    #example = "전기간 전지점 일단위 최고온도 3개"
+    example = "당일(2021년 1월 2일) 전지점 일단위 최고온도 30개"
+    #example = "당일(2021년 1월 1일) 전지점 일단위 최저온도 3개"
 
     input = {
         "source" : example,

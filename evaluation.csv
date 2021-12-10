@@ -1115,7 +1115,7 @@ WHERE TNRW <= 20
 
 ORDER BY TNRW
 ;"
-12,1,당일(20210213) 전지점 일단위 최저온도 3개,"SELECT * FROM (
+12,1,당일(2021년 2월 13일) 전지점 일단위 최저온도 3개,"SELECT * FROM (
 SELECT  TO_CHAR(T.tm,'YYYYMMDD')|| ' ' ||TO_CHAR(T.TA_MIN_TM ,'0000')      AS 관측시각   
 ,S. STN_KO  , S.STN_ID
  , TA_MIN AS   기온
@@ -1153,7 +1153,7 @@ WHERE TNRW <= 20
 
 ORDER BY TNRW
 ;"
-12,3,당일(2010년 11월13일) 전지점 일단위 최저온도 30개,"SELECT * FROM (
+12,3,당일(2010년 11월 13일) 전지점 일단위 최저온도 30개,"SELECT * FROM (
 SELECT  TO_CHAR(T.tm,'YYYYMMDD')|| ' ' ||TO_CHAR(T.TA_MIN_TM ,'0000')      AS 관측시각   
 ,S. STN_KO  , S.STN_ID
  , TA_MIN AS   기온
@@ -1191,7 +1191,7 @@ WHERE TNRW <= 10
 
 ORDER BY TNRW
 ;"
-13,1,당일(20210809) 서울 일단위 최고온도 1개,"SELECT * FROM (
+13,1,당일(2021년 8월 9일) 서울 일단위 최고온도 1개,"SELECT * FROM (
 SELECT  TO_CHAR(T.tm,'YYYYMMDD')|| ' ' ||TO_CHAR(T.TA_MAX_TM ,'0000')      AS 관측시각   
 ,S. STN_KO  , S.STN_ID
  , TA_MAX AS   기온
