@@ -9,13 +9,19 @@ import sys
 import pandas as pd
 import numpy as np
 from pprint import pprint
+import re
+import os, psutil
+
+process = psutil.Process(os.getpid())
+
+print(process.memory_info().rss)
 # from infer_dev import get_sql, get_output, get_template_embedding/, response_template
 app = Flask(__name__)
 
 
 def load_model():
     model = BartForConditionalGeneration.from_pretrained('home/KoBART-summarization/kobart_weather_v2')
-    model2 = SentenceTransformer('sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2')
+    model2 = SentenceTransformer('home/KoBART-summarization/sentence-model')
     return model, model2
 
 def get_tokenizer():
@@ -91,7 +97,7 @@ def response_template(res):
             hour = input[indx-2:indx]
             minute = input[indx+1:indx+3]
         output = output.replace('YYYYMMDDHHMI', year+month+day+hour+minute)
-    else:                   
+    else:
         output = output.replace("입력='YYYYMMDDHHMI'", '')
     response = {
         "pseudoList":[{
@@ -104,19 +110,35 @@ def response_template(res):
 
 def get_output(input, templates):
     global tokenizer, model
-    text = input['source']         
-    date_s = input['date'].split(" ")        
-    ymd = date_s[0].split('-')                       
-    hms = date_s[1].split(':')
-    date = [ymd[0],ymd[1],ymd[2],hms[0],hms[1]] 
+    original_text = input['source']
+    if re.search('[0-9]+년 [0-9]+월 [0-9]+일', original_text):
+        source_date = re.findall('[0-9]+년 [0-9]+월 [0-9]+일', original_text)[0]
+        source_year = source_date.split('년 ')[0]
+        source_month = source_date.split('년 ')[1].split('월 ')[0]
+        source_day = source_date.split('년 ')[1].split('월 ')[1].split('일')[0]
+        if int(source_month) < 10:
+            source_month = "0" + source_month
+        if int(source_day) < 10:
+            source_day = "0" + source_day
+        date = [source_year, source_month, source_day, '00', '00']
+    else:
+        if input['date']!=None and input['date']!='':
+            date_s = input['date'].split(" ")        
+            ymd = date_s[0].split('-')                       
+            hms = date_s[1].split(':')
+            date = [ymd[0],ymd[1],ymd[2],hms[0],hms[1]]
+        else:
+            print('Error: Fill the date variable.')
     # Get rid of date information input
-    original_text = text                
+    text = original_text                
+    '''
     if '-' in text and ':' in text:   
         text = text[17:]
     elif '-' in text:
         text = text[11:]    
     elif ':' in text:   
-        text = text[6:]     
+        text = text[6:]
+    '''
     input_ids = tokenizer.encode(text)
     if use_cuda:
         input_ids = torch.tensor(input_ids).to('cuda')
@@ -213,7 +235,9 @@ if __name__ == '__main__':
         use_cuda = True
     else:
         raise Exception(f"You need to choose between 'cpu' or 'gpu' for the device info, but got {use_cuda}")
+    print("loading model..")
     model, model2 = load_model()
+    print("loaded!")
     if use_cuda:
         model = model.to('cuda')
         model2 = model2.to('cuda')
