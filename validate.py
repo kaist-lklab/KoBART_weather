@@ -6,16 +6,17 @@ from torch.utils.data import DataLoader, Dataset
 import textwrap
 import string
 import re
+import pandas as pd
 
 def load_model():
-    model = BartForConditionalGeneration.from_pretrained('./kobart_summary')
+    model = BartForConditionalGeneration.from_pretrained('./nl2url_v2.0.0')
     return model
 
 model = load_model()
 model.cuda()
 tokenizer = get_kobart_tokenizer()
 
-test_file_path = 'data/weather_test.tsv'
+test_file_path = 'data/nl2url_v2.0.0_test.tsv'
 test = KoBARTSummaryDataset(test_file_path, tokenizer, 500)
 val_loader = DataLoader(test, batch_size=8, num_workers=4, shuffle=False)
 pad_token_id = 0
@@ -46,16 +47,16 @@ def normalize_answer(s):
     def remove_punc(text):
         exclude = set(string.punctuation)
         return "".join(ch for ch in text if ch not in exclude)
-
+    '''
     def lower(text):
         return text.lower()
-
+    '''
     def rid_of_specials(text):
         text = text.replace("<extra_id_0>", "")
         text = text.replace("<extra_id_1>", "")
         return text
 
-    return rid_of_specials(white_space_fix(remove_articles(remove_punc(lower(s)))))
+    return rid_of_specials(white_space_fix(remove_articles(remove_punc(s))))
 
 def exact_match_score(prediction, ground_truth):
     return int(normalize_answer(prediction) == normalize_answer(ground_truth))
@@ -74,6 +75,7 @@ def approx_match_score(prediction, ground_truth):
 total_cnt=0
 em_correct_num = 0
 subset_correct_num = 0
+results = []
 
 for batch in iter(val_loader):
     attention_mask = batch['input_ids'].ne(pad_token_id).float()
@@ -111,8 +113,12 @@ for batch in iter(val_loader):
         print(f'GROUD TRUTH: {ground_truth}, MODEL OUTPUT: {predicted}')
         if em == 1:
             em_correct_num+=1
+        else:
+            result = [lines, ground_truth, predicted]
+            results.append(result)
         if subset == 1:
             subset_correct_num+=1
-
+df = pd.DataFrame(results, columns=['input', 'ground_truth', 'predicted'])
+df.to_excel('data/results_wrong.xlsx', index=True)
 print(f'Number of total validation data: {total_cnt}')
 print(f'Number of correct predictions: {em_correct_num, subset_correct_num}. Percentage : {em_correct_num / total_cnt, subset_correct_num / total_cnt}')

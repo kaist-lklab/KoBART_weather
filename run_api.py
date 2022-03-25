@@ -11,11 +11,7 @@ import numpy as np
 from pprint import pprint
 
 import re
-import os, psutil
 
-process = psutil.Process(os.getpid())
-
-print(process.memory_info().rss)
 # from infer_dev import get_sql, get_output, get_template_embedding/, response_template
 app = Flask(__name__)
 
@@ -87,6 +83,7 @@ def response_template(res):
             day = str(int(day) - 1)
         #handling custom year-month-day time"
         # There is date information included in input
+        '''
         if '-' in input:  
             indx = input.find('-')              
             year = input[indx-4:indx]
@@ -97,6 +94,7 @@ def response_template(res):
             indx = input.find(':')       
             hour = input[indx-2:indx]
             minute = input[indx+1:indx+3]
+        '''
         output = output.replace('YYYYMMDDHHMI', year+month+day+hour+minute)
     else:
         output = output.replace("입력='YYYYMMDDHHMI'", '')

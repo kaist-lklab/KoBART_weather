@@ -46,12 +46,12 @@ class ArgsBase():
             parents=[parent_parser], add_help=False)
         parser.add_argument('--train_file',
                             type=str,
-                            default='data/weather_train.tsv',
+                            default='data/nl2url_v2.0.0_train.tsv',
                             help='train file')
 
         parser.add_argument('--test_file',
                             type=str,
-                            default='data/weather_test.tsv',
+                            default='data/nl2url_v2.0.0_validation.tsv',
                             help='test file')
 
         parser.add_argument('--batch_size',
@@ -233,13 +233,15 @@ class KoBARTConditionalGeneration(Base):
         def remove_punc(text):
             exclude = set(string.punctuation)
             return "".join(ch for ch in text if ch not in exclude)
+        '''
         def lower(text):
             return text.lower()
+        '''
         def rid_of_specials(text):
             text = text.replace("<extra_id_0>", "")
             text = text.replace("<extra_id_1>", "")
             return text
-        return rid_of_specials(white_space_fix(remove_articles(remove_punc(lower(s)))))
+        return rid_of_specials(white_space_fix(remove_articles(remove_punc(s))))
 
     def exact_match_score(self, prediction, ground_truth):
         return int(self.normalize_answer(prediction) == self.normalize_answer(ground_truth))
@@ -332,7 +334,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
     logging.info(args)
 
-    #os.environ['CUDA_VISIBLE_DEVICES'] = args.gpu_nums
+    os.environ['CUDA_VISIBLE_DEVICES'] = args.gpu_nums
     wandb_logger = WandbLogger(project=args.wandb_project, name=args.run_name)
 
     model = KoBARTConditionalGeneration(args)

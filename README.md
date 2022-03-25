@@ -1,30 +1,20 @@
-# KoBART-summarization
+# KoBART-weather
 
 ## Install KoBART
 ```
 pip install git+https://github.com/SKT-AI/KoBART#egg=kobart
 ```
 
-## Download binary
-```
-pip install gdown
-python download_binary.py
-
-kobart_summary
-├── config.json
-├── pytorch_model.bin
-```
-
 ## Download pretrained weather seq2seq binary
 ```
 python download_weather_binary.py
 
-kobart_weather
+nl2url_v2.0.0
 ├── config.json
 ├── pytorch_model.bin
 ```
 
-## How to Train Weather Seq2Seq model
+## How to train weather seq2seq model
 ```
 python train.py  --gradient_clip_val 1.0 --max_epochs 5 --default_root_dir logs --lr 3e-5 --gpus 1 --batch_size 4 --num_workers 4 --gpu_nums 2 --wandb_project weather_kobart --run_name KoBART_e5_gpu1_bs4_lr3e-5
 
@@ -32,6 +22,11 @@ python train.py  --gradient_clip_val 1.0 --max_epochs 5 --default_root_dir logs 
 
 #In order to train with noise injection in training data, run the following code:
 python train.py  --train_file data/weather_train_noise.tsv --gradient_clip_val 1.0 --max_epochs 5 --default_root_dir logs --lr 3e-5 --gpus 1 --batch_size 4 --num_workers 4 --gpu_nums 2 --wandb_project weather_kobart --run_name KoBART_e5_gpu1_bs4_lr3e-5
+```
+
+## Extract model binary
+```
+python get_model_binary.py --hparams ./logs/tb_logs/default/version_0/hparams.yaml --model_binary ./nl2url_v2.0.0
 ```
 
 ## Requirements
