@@ -17,7 +17,7 @@ app = Flask(__name__)
 
 
 def load_model():
-    model = BartForConditionalGeneration.from_pretrained('home/KoBART-summarization/kobart_weather_v2')
+    model = BartForConditionalGeneration.from_pretrained('home/KoBART-summarization/nl2url_v2.0.0')
     model2 = SentenceTransformer('home/KoBART-summarization/sentence-model')
     return model, model2
 
@@ -65,7 +65,7 @@ def get_template_embeddings(model):
         template_embeds.append(model.encode(input))
 
     return (template_embeds, index_to_input, template_dict)
-
+    
 def response_template(res):
     input = res[0]     
     output = res[1]     
