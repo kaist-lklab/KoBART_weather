@@ -26,7 +26,7 @@ python train.py  --train_file data/weather_train_noise.tsv --gradient_clip_val 1
 
 ## Extract model binary
 ```
-python get_model_binary.py --hparams ./logs/tb_logs/default/version_0/hparams.yaml --model_binary ./nl2url_v2.0.0
+python get_model_binary.py --hparams ./logs/tb_logs/default/version_0/hparams.yaml --model_binary ./logs/model_chp/.ckpt
 ```
 
 ## Requirements
