@@ -1,13 +1,13 @@
 # KoBART-weather
 
-## Download required libraries
-```
-pip3 install -r ./requirements.txt
-```
-
 ## Install KoBART
 ```
 pip3 install git+https://github.com/SKT-AI/KoBART#egg=kobart
+```
+
+## Download required libraries
+```
+pip3 install -r ./requirements.txt
 ```
 
 ## Download pretrained weather seq2seq binary
